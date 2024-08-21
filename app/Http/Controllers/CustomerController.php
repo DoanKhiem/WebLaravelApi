@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CustomerRequest;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -11,7 +13,11 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        //
+        $customers = Customer::paginate(10);
+        return response()->json([
+            'success' => true,
+            'data' => $customers
+        ]);
     }
 
     /**
@@ -25,9 +31,17 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CustomerRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        $customer = Customer::create($validated);
+
+        return response()->json([
+            'success' => true,
+            'data' => $customer,
+            'message' => 'Customer created successfully'
+        ], 201); // Trả về mã trạng thái 201 (Created)
     }
 
     /**
@@ -35,7 +49,18 @@ class CustomerController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $customer = Customer::find($id);
+
+        if (!$customer) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Customer not found'
+            ], 404);
+        }
+        return response()->json([
+            'success' => true,
+            'data' => $customer
+        ]);
     }
 
     /**
@@ -49,9 +74,26 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(CustomerRequest $request, string $id)
     {
-        //
+        $customer = Customer::find($id);
+
+        if (!$customer) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Customer not found'
+            ], 404);
+        }
+
+        $validated = $request->validated();
+
+        $customer->update($validated);
+
+        return response()->json([
+            'success' => true,
+            'data' => $customer,
+            'message' => 'Customer updated successfully'
+        ]);
     }
 
     /**
@@ -59,6 +101,20 @@ class CustomerController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $customer = Customer::find($id);
+
+        if (!$customer) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Customer not found'
+            ], 404);
+        }
+
+        $customer->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Customer deleted successfully'
+        ]);
     }
 }

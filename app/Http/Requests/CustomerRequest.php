@@ -29,7 +29,7 @@ class CustomerRequest extends FormRequest
             'email' => 'required|email',
             'telephone' => 'required',
             'address' => 'required',
-            'avatar' => 'required',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'id_number' => 'required',
         ];
     }

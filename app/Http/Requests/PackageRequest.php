@@ -23,11 +23,11 @@ class PackageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'title' => 'required',
             'percent' => 'required',
 //            'detail' => 'required',
-            'file' => 'required',
+            'file' => 'nullable',
         ];
     }
 
@@ -38,7 +38,7 @@ class PackageRequest extends FormRequest
             'title.required' => 'Nhập tiêu đề',
             'percent.required' => 'Nhập phần trăm',
 //            'detail.required' => 'Nhập chi tiết',
-            'file.required' => 'Nhập file',
+//            'file.nullable' => 'Nhập file',
         ];
     }
 

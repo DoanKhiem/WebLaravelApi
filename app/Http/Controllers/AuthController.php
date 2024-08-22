@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MemberRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -10,13 +11,9 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
     // Đăng ký người dùng mới
-    public function register(Request $request)
+    public function register(MemberRequest $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+        $validatedData = $request->validated();
 
         $user = User::create([
             'name' => $validatedData['name'],

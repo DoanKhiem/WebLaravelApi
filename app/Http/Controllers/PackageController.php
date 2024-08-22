@@ -6,15 +6,24 @@ use App\Http\Requests\PackageRequest;
 use App\Http\Requests\PackageUpdateRequest;
 use App\Models\Package;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PackageController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $packages = Package::paginate(10);
+        $name = $request->get('name');
+
+        $query = Package::query();
+
+        if ($name) {
+            $query->where('title', 'like', '%' . $name . '%');
+        }
+
+        $packages = $query->paginate(10);
         return response()->json([
             'success' => true,
             'data' => $packages
@@ -34,10 +43,23 @@ class PackageController extends Controller
      */
     public function store(PackageRequest $request)
     {
-        dd($request->all());
+
         $validated = $request->validated();
 
-        $package = Package::create($request->all());
+        // Handle the file upload
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = $image->getClientOriginalName();
+            $validated['image'] = $image->storeAs('package/images', $imageName, 'public');
+        }
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $filename = $file->getClientOriginalName();
+            $validated['file'] = $file->storeAs('package/file', $filename, 'public');
+        }
+
+        $package = Package::create($validated);
 
         return response()->json([
             'success' => true,
@@ -76,9 +98,8 @@ class PackageController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(PackageRequest $request, Package $package)
+    public function update(PackageRequest $request, string $id)
     {
-        dd($request->all());
         $package = Package::find($id);
 
         if (!$package) {
@@ -90,7 +111,26 @@ class PackageController extends Controller
 
         $validated = $request->validated();
 
-        $package->update($request->all());
+        // Handle the file upload
+        if ($request->hasFile('image')) {
+            if ($package->image) {
+                Storage::disk('public')->delete($package->image);
+            }
+            $image = $request->file('image');
+            $imageName = $image->getClientOriginalName();
+            $validated['image'] = $image->storeAs('package/images', $imageName, 'public');
+        }
+
+        if ($request->hasFile('file')) {
+            if ($package->file) {
+                Storage::disk('public')->delete($package->file);
+            }
+            $file = $request->file('file');
+            $filename = $file->getClientOriginalName();
+            $validated['file'] = $file->storeAs('package/file', $filename, 'public');
+        }
+
+        $package->update($validated);
 
         return response()->json([
             'success' => true,

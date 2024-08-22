@@ -5,15 +5,25 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CustomerRequest;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CustomerController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $customers = Customer::paginate(10);
+        $name = $request->get('name');
+
+        $query = Customer::query();
+
+        if ($name) {
+            $query->where('first_name', 'like', '%' . $name . '%')
+                ->orWhere('last_name', 'like', '%' . $name . '%');
+        }
+
+        $customers = $query->paginate(10);
         return response()->json([
             'success' => true,
             'data' => $customers
@@ -34,6 +44,11 @@ class CustomerController extends Controller
     public function store(CustomerRequest $request)
     {
         $validated = $request->validated();
+
+        // Handle the file upload
+        if ($request->hasFile('avatar')) {
+            $validated['avatar'] = $request->file('avatar')->store('avatars', 'public');
+        }
 
         $customer = Customer::create($validated);
 
@@ -76,6 +91,9 @@ class CustomerController extends Controller
      */
     public function update(CustomerRequest $request, string $id)
     {
+        $validated = $request->validated();
+
+
         $customer = Customer::find($id);
 
         if (!$customer) {
@@ -85,7 +103,18 @@ class CustomerController extends Controller
             ], 404);
         }
 
-        $validated = $request->validated();
+
+
+        // Handle the file upload
+        if ($request->hasFile('avatar')) {
+            if ($customer->avatar) {
+                Storage::disk('public')->delete($customer->avatar);
+            }
+
+            $validated['avatar'] = $request->file('avatar')->store('avatars', 'public');
+        } else {
+            unset($validated['avatar']);
+        }
 
         $customer->update($validated);
 

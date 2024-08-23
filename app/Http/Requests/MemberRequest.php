@@ -24,8 +24,7 @@ class MemberRequest extends FormRequest
     {
         $rules = [
             'name' => 'required|string|max:255',
-            'password' => 'required|string|min:8|confirmed',
-            'password_confirmation' => 'required',
+
         ];
 
         // If the request is an update request, ignore the current record for the unique email validation
@@ -37,8 +36,10 @@ class MemberRequest extends FormRequest
                 'max:255',
                 Rule::unique('users')->ignore($this->route('member')),
             ];
+            $rules['password'] = 'sometimes|required|string|min:8|confirmed';
         } else {
             $rules['email'] = 'required|string|email|max:255|unique:users';
+            $rules['password'] = 'required|string|min:8|confirmed';
         }
 
         return $rules;

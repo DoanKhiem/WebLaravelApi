@@ -50,7 +50,7 @@ class LoanControler extends Controller
         return response()->json([
             'success' => true,
             'data' => $loan,
-            'message' => 'Customer created successfully'
+            'message' => 'Loan created successfully'
         ], 201); // Trả về mã trạng thái 201 (Created)
     }
 

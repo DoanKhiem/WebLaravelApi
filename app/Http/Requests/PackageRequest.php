@@ -22,21 +22,29 @@ class PackageRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        $rules = [
             'title' => 'required',
             'percent' => 'required',
-//            'detail' => 'required',
-            'file' => 'nullable',
+            'detail' => '',
         ];
+
+        if ($this->method() === 'PUT' || $this->method() === 'PATCH') {
+            $rules['image'] = 'sometimes|required|image|mimes:jpeg,png,jpg,gif,svg|max:2048';
+            $rules['file'] = 'sometimes|required|file';
+        } else {
+            $rules['image'] = 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048';
+            $rules['file'] = 'required|file';
+        }
+
+        return $rules;
     }
 
     public function messages()
     {
         return [
-            'image.required' => 'Nhập hình ảnh',
             'title.required' => 'Nhập tiêu đề',
             'percent.required' => 'Nhập phần trăm',
+            'image.required' => 'Nhập hình ảnh',
 //            'detail.required' => 'Nhập chi tiết',
 //            'file.nullable' => 'Nhập file',
         ];

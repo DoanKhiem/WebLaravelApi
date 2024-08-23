@@ -50,13 +50,15 @@ class PackageController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = $image->getClientOriginalName();
-            $validated['image'] = $image->storeAs('package/images', $imageName, 'public');
+            $image->storeAs('package/images', $imageName, 'public');
+            $validated['image'] = $imageName;
         }
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $filename = $file->getClientOriginalName();
-            $validated['file'] = $file->storeAs('package/file', $filename, 'public');
+            $file->storeAs('package/file', $filename, 'public');
+            $validated['file'] = $filename;
         }
 
         $package = Package::create($validated);
@@ -118,7 +120,8 @@ class PackageController extends Controller
             }
             $image = $request->file('image');
             $imageName = $image->getClientOriginalName();
-            $validated['image'] = $image->storeAs('package/images', $imageName, 'public');
+            $image->storeAs('package/images', $imageName, 'public');
+            $validated['image'] = $imageName;
         }
 
         if ($request->hasFile('file')) {
@@ -127,7 +130,8 @@ class PackageController extends Controller
             }
             $file = $request->file('file');
             $filename = $file->getClientOriginalName();
-            $validated['file'] = $file->storeAs('package/file', $filename, 'public');
+            $file->storeAs('package/file', $filename, 'public');
+            $validated['file'] = $filename;
         }
 
         $package->update($validated);

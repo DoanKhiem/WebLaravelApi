@@ -5,6 +5,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\LoanControler;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,3 +22,5 @@ Route::resource('member', MemberController::class);
 Route::resource('customer', CustomerController::class);
 Route::resource('package', PackageController::class);
 Route::resource('loan', LoanControler::class);
+
+Route::get('dashboard', [DashboardController::class, 'dashboard']);

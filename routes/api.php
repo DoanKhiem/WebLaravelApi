@@ -18,9 +18,13 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
-Route::resource('member', MemberController::class);
-Route::resource('customer', CustomerController::class);
-Route::resource('package', PackageController::class);
-Route::resource('loan', LoanControler::class);
 
-Route::get('dashboard', [DashboardController::class, 'dashboard']);
+Route::middleware('auth:sanctum')->post('check-token', [AuthController::class, 'checkToken']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('dashboard', [DashboardController::class, 'dashboard']);
+    Route::resource('member', MemberController::class);
+    Route::resource('customer', CustomerController::class);
+    Route::resource('package', PackageController::class);
+    Route::resource('loan', LoanControler::class);
+});

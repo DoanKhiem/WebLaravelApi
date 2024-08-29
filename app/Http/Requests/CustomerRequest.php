@@ -26,11 +26,11 @@ class CustomerRequest extends FormRequest
         return [
             'first_name' => 'required',
             'last_name' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:customers,email',
             'telephone' => 'required',
             'address' => 'required',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'id_number' => 'required',
+            'id_number' => 'required|unique:customers,id_number',
         ];
     }
 

@@ -105,7 +105,7 @@ class MemberController extends Controller
         $member->name = $validated['name'];
 
         // If password is present in the request and it matches the password_confirmation, update the password
-        if (isset($validated['password']) && $validated['password'] === $validated['password_confirmation']) {
+        if (isset($validated['password'])) {
             $member->password = Hash::make($validated['password']);
         }
 

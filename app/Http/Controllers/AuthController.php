@@ -47,7 +47,8 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
-            'message' => 'Login successfully'
+            'message' => 'Login successfully',
+            'user' => $user
         ]);
     }
 
@@ -59,5 +60,28 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Logged out successfully'
         ]);
+    }
+
+    public function checkToken(Request $request)
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+            if ($user->tokenCan('auth_token')) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Success'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Error'
+                ]);
+            }
+        } else {
+            return response()->json([
+                'message' => 'No user is currently logged in'
+            ]);
+        }
+
     }
 }

@@ -20,7 +20,8 @@ class MemberController extends Controller
         $query = User::query();
 
         if ($name) {
-            $query->where('name', 'like', '%' . $name . '%');
+            $query->where('name', 'like', '%' . $name . '%')
+                ->orWhere('email', 'like', '%' . $name . '%');
         }
 
         $members = $query->paginate(10);

@@ -20,7 +20,8 @@ class CustomerController extends Controller
 
         if ($name) {
             $query->where('first_name', 'like', '%' . $name . '%')
-                ->orWhere('last_name', 'like', '%' . $name . '%');
+                ->orWhere('last_name', 'like', '%' . $name . '%')
+                ->orWhere('email', 'like', '%' . $name . '%');
         }
 
         $customers = $query->paginate(10);

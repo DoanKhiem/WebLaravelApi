@@ -24,7 +24,7 @@ class MemberController extends Controller
                 ->orWhere('email', 'like', '%' . $name . '%');
         }
 
-        $members = $query->paginate(10);
+        $members = $query->orderBy('updated_at','DESC')->paginate(10);
         return response()->json([
             'success' => true,
             'data' => $members

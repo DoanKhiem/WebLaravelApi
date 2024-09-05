@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PackageRequest;
-use App\Http\Requests\PackageUpdateRequest;
 use App\Models\Package;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -23,7 +22,7 @@ class PackageController extends Controller
             $query->where('title', 'like', '%' . $name . '%');
         }
 
-        $packages = $query->paginate(10);
+        $packages = $query->orderBy('updated_at','DESC')->paginate(10);
         return response()->json([
             'success' => true,
             'data' => $packages

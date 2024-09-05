@@ -24,7 +24,7 @@ class CustomerController extends Controller
                 ->orWhere('email', 'like', '%' . $name . '%');
         }
 
-        $customers = $query->paginate(10);
+        $customers = $query->orderBy('updated_at','DESC')->paginate(10);
         return response()->json([
             'success' => true,
             'data' => $customers

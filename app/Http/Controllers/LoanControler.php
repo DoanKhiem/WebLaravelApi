@@ -17,7 +17,7 @@ class LoanControler extends Controller
     {
         $query = Loan::with(['customer', 'package']);
 
-        $loans = $query->paginate(10);
+        $loans = $query->orderBy('updated_at','DESC')->paginate(10);
         return response()->json([
             'success' => true,
             'data' => $loans

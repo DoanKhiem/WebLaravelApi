@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoanRequest;
+use App\Mail\LoanMail;
 use App\Models\Customer;
 use App\Models\Loan;
 use App\Models\Package;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class LoanControler extends Controller
 {
@@ -17,7 +20,7 @@ class LoanControler extends Controller
     {
         $query = Loan::with(['customer', 'package']);
 
-        $loans = $query->paginate(10);
+        $loans = $query->orderBy('updated_at','DESC')->paginate(10);
         return response()->json([
             'success' => true,
             'data' => $loans
@@ -47,11 +50,25 @@ class LoanControler extends Controller
 
         $loan = Loan::create($validated);
 
-        return response()->json([
-            'success' => true,
-            'data' => $loan,
-            'message' => 'Loan created successfully'
-        ], 201); // Trả về mã trạng thái 201 (Created)
+        if ($loan) {
+            $mailData = [
+                'title' => 'Mail from Payday',
+                'body' => 'Create loan successfully'
+            ];
+            Mail::to($loan->customer->email)->send(new LoanMail($mailData));
+
+            return response()->json([
+                'success' => true,
+                'data' => $loan,
+                'message' => 'Loan created successfully'
+            ], 201); // Trả về mã trạng thái 201 (Created)
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Loan could not be created'
+            ], 500);
+        }
+
     }
 
     /**
@@ -125,5 +142,23 @@ class LoanControler extends Controller
             'success' => true,
             'message' => 'Loan deleted successfully'
         ]);
+    }
+
+    public function exportPdf()
+    {
+        $loans = Loan::all(); // dữ liệu bạn muốn xuất ra PDF
+        $data = [
+            'title' => 'Welcome to Payday',
+            'date' => date('m/d/Y'),
+            'loans' => $loans
+        ];
+
+        $pdf = Pdf::loadView('loan_export', $data); // 'pdf_view' là tên view bạn muốn render ra PDF
+
+        $filename = 'export.pdf';
+        $path = public_path('pdf/' . $filename);
+        $pdf->save($path);
+
+        return response()->json(['url' => asset('pdf/' . $filename)]);
     }
 }

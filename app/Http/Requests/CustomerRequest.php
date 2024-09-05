@@ -23,15 +23,32 @@ class CustomerRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+//        return [
+//            'first_name' => 'required',
+//            'last_name' => 'required',
+//            'email' => 'required|email|unique:customers,email',
+//            'telephone' => 'required',
+//            'address' => 'required',
+//            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+//            'id_number' => 'required|unique:customers,id_number',
+//        ];
+        $rules = [
             'first_name' => 'required',
             'last_name' => 'required',
-            'email' => 'required|email|unique:customers,email',
             'telephone' => 'required',
             'address' => 'required',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'id_number' => 'required|unique:customers,id_number',
         ];
+
+        if ($this->method() === 'PUT' || $this->method() === 'PATCH') {
+            $rules['email'] = 'required|email|unique:customers,email,' . $this->route('customer');
+            $rules['id_number'] = 'required|unique:customers,id_number,' . $this->route('customer');
+        } else {
+            $rules['email'] = 'required|email|unique:customers,email';
+            $rules['id_number'] = 'required|unique:customers,id_number';
+        }
+
+        return $rules;
     }
 
     protected function failedValidation(Validator $validator)

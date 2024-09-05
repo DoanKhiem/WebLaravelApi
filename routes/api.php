@@ -27,4 +27,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('customer', CustomerController::class);
     Route::resource('package', PackageController::class);
     Route::resource('loan', LoanControler::class);
+
+    Route::get('export-pdf-loan', [LoanControler::class, 'exportPdf']);
 });

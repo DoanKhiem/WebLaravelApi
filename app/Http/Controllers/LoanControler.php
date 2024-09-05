@@ -7,6 +7,7 @@ use App\Mail\LoanMail;
 use App\Models\Customer;
 use App\Models\Loan;
 use App\Models\Package;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -141,5 +142,23 @@ class LoanControler extends Controller
             'success' => true,
             'message' => 'Loan deleted successfully'
         ]);
+    }
+
+    public function exportPdf()
+    {
+        $loans = Loan::all(); // dữ liệu bạn muốn xuất ra PDF
+        $data = [
+            'title' => 'Welcome to Payday',
+            'date' => date('m/d/Y'),
+            'loans' => $loans
+        ];
+
+        $pdf = Pdf::loadView('loan_export', $data); // 'pdf_view' là tên view bạn muốn render ra PDF
+
+        $filename = 'export.pdf';
+        $path = public_path('pdf/' . $filename);
+        $pdf->save($path);
+
+        return response()->json(['url' => asset('pdf/' . $filename)]);
     }
 }

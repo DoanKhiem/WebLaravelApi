@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoanRequest;
+use App\Mail\LoanMail;
 use App\Models\Customer;
 use App\Models\Loan;
 use App\Models\Package;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class LoanControler extends Controller
 {
@@ -47,11 +49,25 @@ class LoanControler extends Controller
 
         $loan = Loan::create($validated);
 
-        return response()->json([
-            'success' => true,
-            'data' => $loan,
-            'message' => 'Loan created successfully'
-        ], 201); // Trả về mã trạng thái 201 (Created)
+        if ($loan) {
+            $mailData = [
+                'title' => 'Mail from Payday',
+                'body' => 'Create loan successfully'
+            ];
+            Mail::to($loan->customer->email)->send(new LoanMail($mailData));
+
+            return response()->json([
+                'success' => true,
+                'data' => $loan,
+                'message' => 'Loan created successfully'
+            ], 201); // Trả về mã trạng thái 201 (Created)
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Loan could not be created'
+            ], 500);
+        }
+
     }
 
     /**

@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('packages', function (Blueprint $table) {
+        Schema::create('payment_periods', function (Blueprint $table) {
             $table->id();
-//            $table->string('image');
             $table->string('title');
-            $table->float('amount');
-//            $table->text('detail');
-//            $table->integer('percent');
-//            $table->text('file');
+            $table->integer('percent');
             $table->timestamps();
         });
     }
@@ -28,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('packages');
+        Schema::dropIfExists('payment_periods');
     }
 };

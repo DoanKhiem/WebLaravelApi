@@ -19,8 +19,7 @@ class CustomerController extends Controller
         $query = Customer::query();
 
         if ($name) {
-            $query->where('first_name', 'like', '%' . $name . '%')
-                ->orWhere('last_name', 'like', '%' . $name . '%')
+            $query->where('full_name', 'like', '%' . $name . '%')
                 ->orWhere('email', 'like', '%' . $name . '%');
         }
 

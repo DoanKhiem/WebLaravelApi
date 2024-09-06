@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\MemberRequest;
+use App\Http\Requests\AgentRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class MemberController extends Controller
+class AgentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -42,7 +42,7 @@ class MemberController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(MemberRequest $request)
+    public function store(AgentRequest $request)
     {
         $validatedData = $request->validated();
 
@@ -89,7 +89,7 @@ class MemberController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(MemberRequest $request, string $id)
+    public function update(AgentRequest $request, string $id)
     {
         $member = User::find($id);
 

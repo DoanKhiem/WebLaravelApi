@@ -33,19 +33,19 @@ class CustomerRequest extends FormRequest
 //            'id_number' => 'required|unique:customers,id_number',
 //        ];
         $rules = [
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'telephone' => 'required',
-            'address' => 'required',
+            'full_name' => 'required',
+//            'last_name' => 'required',
+//            'telephone' => 'required',
+//            'address' => 'required',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
 
         if ($this->method() === 'PUT' || $this->method() === 'PATCH') {
-            $rules['email'] = 'required|email|unique:customers,email,' . $this->route('customer');
-            $rules['id_number'] = 'required|unique:customers,id_number,' . $this->route('customer');
+            $rules['email'] = 'nullable|email|unique:customers,email,' . $this->route('customer');
+//            $rules['id_number'] = 'required|unique:customers,id_number,' . $this->route('customer');
         } else {
-            $rules['email'] = 'required|email|unique:customers,email';
-            $rules['id_number'] = 'required|unique:customers,id_number';
+            $rules['email'] = 'nullable|email|unique:customers,email';
+//            $rules['id_number'] = 'required|unique:customers,id_number';
         }
 
         return $rules;

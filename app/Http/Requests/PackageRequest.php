@@ -24,7 +24,7 @@ class PackageRequest extends FormRequest
     {
         $rules = [
             'title' => 'required',
-            'amount ' => 'required|numeric',
+            'amount' => 'required|numeric',
 //            'detail' => '',
         ];
 
@@ -39,16 +39,16 @@ class PackageRequest extends FormRequest
         return $rules;
     }
 
-    public function messages()
-    {
-        return [
+//    public function messages()
+//    {
+//        return [
 //            'title.required' => 'Nhập tiêu đề',
 //            'percent.required' => 'Nhập phần trăm',
 //            'image.required' => 'Nhập hình ảnh',
 //            'detail.required' => 'Nhập chi tiết',
 //            'file.nullable' => 'Nhập file',
-        ];
-    }
+//        ];
+//    }
 
 //    protected function failedValidation(Validator $validator)
 //    {

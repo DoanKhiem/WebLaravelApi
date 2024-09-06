@@ -46,19 +46,19 @@ class PackageController extends Controller
         $validated = $request->validated();
 
         // Handle the file upload
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = $image->getClientOriginalName();
-            $image->storeAs('package/images', $imageName, 'public');
-            $validated['image'] = $imageName;
-        }
-
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $filename = $file->getClientOriginalName();
-            $file->storeAs('package/file', $filename, 'public');
-            $validated['file'] = $filename;
-        }
+//        if ($request->hasFile('image')) {
+//            $image = $request->file('image');
+//            $imageName = $image->getClientOriginalName();
+//            $image->storeAs('package/images', $imageName, 'public');
+//            $validated['image'] = $imageName;
+//        }
+//
+//        if ($request->hasFile('file')) {
+//            $file = $request->file('file');
+//            $filename = $file->getClientOriginalName();
+//            $file->storeAs('package/file', $filename, 'public');
+//            $validated['file'] = $filename;
+//        }
 
         $package = Package::create($validated);
 
@@ -113,25 +113,25 @@ class PackageController extends Controller
         $validated = $request->validated();
 
         // Handle the file upload
-        if ($request->hasFile('image')) {
-            if ($package->image) {
-                Storage::disk('public')->delete($package->image);
-            }
-            $image = $request->file('image');
-            $imageName = $image->getClientOriginalName();
-            $image->storeAs('package/images', $imageName, 'public');
-            $validated['image'] = $imageName;
-        }
-
-        if ($request->hasFile('file')) {
-            if ($package->file) {
-                Storage::disk('public')->delete($package->file);
-            }
-            $file = $request->file('file');
-            $filename = $file->getClientOriginalName();
-            $file->storeAs('package/file', $filename, 'public');
-            $validated['file'] = $filename;
-        }
+//        if ($request->hasFile('image')) {
+//            if ($package->image) {
+//                Storage::disk('public')->delete($package->image);
+//            }
+//            $image = $request->file('image');
+//            $imageName = $image->getClientOriginalName();
+//            $image->storeAs('package/images', $imageName, 'public');
+//            $validated['image'] = $imageName;
+//        }
+//
+//        if ($request->hasFile('file')) {
+//            if ($package->file) {
+//                Storage::disk('public')->delete($package->file);
+//            }
+//            $file = $request->file('file');
+//            $filename = $file->getClientOriginalName();
+//            $file->storeAs('package/file', $filename, 'public');
+//            $validated['file'] = $filename;
+//        }
 
         $package->update($validated);
 

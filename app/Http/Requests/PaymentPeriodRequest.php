@@ -25,7 +25,7 @@ class PaymentPeriodRequest extends FormRequest
     {
         return [
             'title' => 'required',
-            'percent ' => 'required|numeric',
+            'percent' => 'required|numeric',
         ];
     }
 

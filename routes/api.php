@@ -6,6 +6,7 @@ use App\Http\Controllers\PackageController;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\LoanControler;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PaymentPeriodController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('agent', AgentController::class);
     Route::resource('customer', CustomerController::class);
     Route::resource('package', PackageController::class);
+    Route::resource('payment-period', PaymentPeriodController::class);
     Route::resource('loan', LoanControler::class);
 
     Route::get('export-pdf-loan', [LoanControler::class, 'exportPdf']);

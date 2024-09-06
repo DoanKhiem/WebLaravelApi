@@ -20,7 +20,7 @@ class DashboardController extends Controller
                 'customers' => Customer::count(),
                 'packages' => Package::count(),
                 'loans' => Loan::count(),
-                'members' => User::count()
+                'agents' => User::count()
             ]
         ]);
     }

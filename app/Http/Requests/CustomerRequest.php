@@ -35,9 +35,11 @@ class CustomerRequest extends FormRequest
         $rules = [
             'full_name' => 'required',
 //            'last_name' => 'required',
-//            'telephone' => 'required',
-//            'address' => 'required',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'dob' => 'nullable|date',
+            'telephone' => 'nullable',
+            'status' => 'nullable',
+            'address' => 'nullable',
         ];
 
         if ($this->method() === 'PUT' || $this->method() === 'PATCH') {

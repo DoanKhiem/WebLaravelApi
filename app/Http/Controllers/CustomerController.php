@@ -45,12 +45,22 @@ class CustomerController extends Controller
     {
         $validated = $request->validated();
 
-        // Handle the file upload
         if ($request->hasFile('avatar')) {
-            $validated['avatar'] = $request->file('avatar')->store('avatars', 'public');
+            $avatar = $request->file('avatar');
+            $filename = $avatar->getClientOriginalName();
+            $validated['avatar'] = $filename;
+        }
+
+        if ($request->has('dob')) {
+            $date = \DateTime::createFromFormat('d-m-Y', $request->dob);
+            $validated['dob'] = $date->format('Y-m-d');
         }
 
         $customer = Customer::create($validated);
+
+        if ($customer && $request->hasFile('avatar')) {
+            $avatar->storeAs('avatars/'.$customer->id, $filename, 'public');
+        }
 
         return response()->json([
             'success' => true,
@@ -103,17 +113,22 @@ class CustomerController extends Controller
             ], 404);
         }
 
-
-
-        // Handle the file upload
         if ($request->hasFile('avatar')) {
             if ($customer->avatar) {
-                Storage::disk('public')->delete($customer->avatar);
+                Storage::disk('public')->delete('avatars/'.$customer->id.'/'.$customer->avatar);
             }
+            $avatar = $request->file('avatar');
 
-            $validated['avatar'] = $request->file('avatar')->store('avatars', 'public');
+            $filename = $avatar->getClientOriginalName();
+            $avatar->storeAs('avatars/'.$customer->id, $filename, 'public');
+            $validated['avatar'] = $filename;
         } else {
             unset($validated['avatar']);
+        }
+
+        if ($request->has('dob')) {
+            $date = \DateTime::createFromFormat('d-m-Y', $request->dob);
+            $validated['dob'] = $date->format('Y-m-d');
         }
 
         $customer->update($validated);
@@ -140,6 +155,10 @@ class CustomerController extends Controller
         }
 
         $customer->delete();
+
+        if ($customer->avatar) {
+            Storage::disk('public')->delete('avatars/'.$customer->id.'/'.$customer->avatar);
+        }
 
         return response()->json([
             'success' => true,

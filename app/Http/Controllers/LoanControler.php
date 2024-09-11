@@ -51,32 +51,33 @@ class LoanControler extends Controller
     {
         $validated = $request->validated();
 
-        if ($request->hasFile('nid_driver_license_file')) {
-            $validated['nid_driver_license_file'] = $request->file('nid_driver_license_file')->store('loans', 'public');
-        }
+        $fields = ['nid_driver_license_file', 'work_id_file', 'selfie', 'pay_slip_1', 'pay_slip_2', 'pay_slip_3'];
 
-        if ($request->hasFile('work_id_file')) {
-            $validated['work_id_file'] = $request->file('work_id_file')->store('loans', 'public');
+        foreach ($fields as $field) {
+            if ($request->hasFile($field)) {
+                $file = $request->file($field);
+                $filename = $file->getClientOriginalName();
+                $validated[$field] = $filename;
+            }
         }
-
-        if ($request->hasFile('selfie')) {
-            $validated['selfie'] = $request->file('selfie')->store('loans', 'public');
-        }
-
-        if ($request->hasFile('pay_slip_1')) {
-            $validated['pay_slip_1'] = $request->file('pay_slip_1')->store('loans', 'public');
-        }
-        if ($request->hasFile('pay_slip_2')) {
-            $validated['pay_slip_2'] = $request->file('pay_slip_2')->store('loans', 'public');
-        }
-
-        if ($request->hasFile('pay_slip_3')) {
-            $validated['pay_slip_3'] = $request->file('pay_slip_3')->store('loans', 'public');
+        if ($request->has('next_fn_pay')) {
+            $date = \DateTime::createFromFormat('d-m-Y', $request->next_fn_pay);
+//            $formattedDate = $date->format('Y-m-d');
+//            $validated['next_fn_pay'] = $formattedDate;
+            $validated['next_fn_pay'] = $date->format('Y-m-d');
         }
 
         $loan = Loan::create($validated);
 
         if ($loan) {
+            foreach ($fields as $field) {
+                if ($request->hasFile($field)) {
+                    $file = $request->file($field);
+                    $filename = $file->getClientOriginalName();
+                    $file->storeAs('loans/'.$loan->id.'/'.$field, $filename, 'public');
+                }
+            }
+
             $mailData = [
                 'title' => 'Mail from Payday',
                 'body' => 'Create loan successfully'
@@ -139,57 +140,23 @@ class LoanControler extends Controller
             ], 404);
         }
 
-        if ($request->hasFile('nid_driver_license_file')) {
-            if ($loan->nid_driver_license_file) {
-                Storage::disk('public')->delete($loan->nid_driver_license_file);
+        $fields = ['nid_driver_license_file', 'work_id_file', 'selfie', 'pay_slip_1', 'pay_slip_2', 'pay_slip_3'];
+
+        foreach ($fields as $field) {
+            if ($request->hasFile($field)) {
+                if ($loan->$field) {
+                    Storage::disk('public')->delete('loans/'.$loan->id.'/'.$field.'/'.$loan->$field);
+                }
+                $file = $request->file($field);
+                $filename = $file->getClientOriginalName();
+                $file->storeAs('loans/'.$loan->id.'/'.$field, $filename, 'public');
+                $validated[$field] = $filename;
             }
-            $validated['nid_driver_license_file'] = $request->file('nid_driver_license_file')->store('loans', 'public');
-        } else {
-            unset($validated['nid_driver_license_file']);
         }
 
-        if ($request->hasFile('work_id_file')) {
-            if ($loan->work_id_file) {
-                Storage::disk('public')->delete($loan->work_id_file);
-            }
-            $validated['work_id_file'] = $request->file('work_id_file')->store('loans', 'public');
-        } else {
-            unset($validated['work_id_file']);
-        }
-
-        if ($request->hasFile('selfie')) {
-            if ($loan->selfie) {
-                Storage::disk('public')->delete($loan->selfie);
-            }
-            $validated['selfie'] = $request->file('selfie')->store('loans', 'public');
-        } else {
-            unset($validated['selfie']);
-        }
-
-        if ($request->hasFile('pay_slip_1')) {
-            if ($loan->pay_slip_1) {
-                Storage::disk('public')->delete($loan->pay_slip_1);
-            }
-            $validated['pay_slip_1'] = $request->file('pay_slip_1')->store('loans', 'public');
-        } else {
-            unset($validated['pay_slip_1']);
-        }
-        if ($request->hasFile('pay_slip_2')) {
-            if ($loan->pay_slip_2) {
-                Storage::disk('public')->delete($loan->pay_slip_2);
-            }
-            $validated['pay_slip_2'] = $request->file('pay_slip_2')->store('loans', 'public');
-        } else {
-            unset($validated['pay_slip_2']);
-        }
-
-        if ($request->hasFile('pay_slip_3')) {
-            if ($loan->pay_slip_3) {
-                Storage::disk('public')->delete($loan->pay_slip_3);
-            }
-            $validated['pay_slip_3'] = $request->file('pay_slip_3')->store('loans', 'public');
-        } else {
-            unset($validated['pay_slip_3']);
+        if ($request->has('next_fn_pay')) {
+            $date = \DateTime::createFromFormat('d-m-Y', $request->next_fn_pay);
+            $validated['next_fn_pay'] = $date->format('Y-m-d');
         }
 
         $loan->update($validated);
@@ -216,6 +183,15 @@ class LoanControler extends Controller
         }
 
         $loan->delete();
+        $fields = ['nid_driver_license_file', 'work_id_file', 'selfie', 'pay_slip_1', 'pay_slip_2', 'pay_slip_3'];
+
+        foreach ($fields as $field) {
+            if ($loan->$field) {
+                Storage::disk('public')->delete('loans/'.$loan->id.'/'.$field.'/'.$loan->$field);
+            }
+        }
+
+
 
         return response()->json([
             'success' => true,

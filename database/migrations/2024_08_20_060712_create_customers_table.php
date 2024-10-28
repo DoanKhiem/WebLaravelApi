@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('dob')->nullable();
             $table->string('email')->unique()->nullable();
             $table->string('telephone', 15)->nullable();
-            $table->enum('status', ['good', 'bad', 'blacklisted'])->nullable();
+            $table->enum('status', ['Actived', 'Completed'])->default('Actived');
             $table->text('address')->nullable();
             $table->timestamps();
         });

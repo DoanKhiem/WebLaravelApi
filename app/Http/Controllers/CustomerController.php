@@ -51,10 +51,10 @@ class CustomerController extends Controller
             $validated['avatar'] = $filename;
         }
 
-        if ($request->has('dob')) {
-            $date = \DateTime::createFromFormat('d-m-Y', $request->dob);
-            $validated['dob'] = $date->format('Y-m-d');
-        }
+//        if ($request->has('dob')) {
+//            $date = \DateTime::createFromFormat('d-m-Y', $request->dob);
+//            $validated['dob'] = $date->format('Y-m-d');
+//        }
 
         $customer = Customer::create($validated);
 
@@ -126,10 +126,10 @@ class CustomerController extends Controller
             unset($validated['avatar']);
         }
 
-        if ($request->has('dob')) {
-            $date = \DateTime::createFromFormat('d-m-Y', $request->dob);
-            $validated['dob'] = $date->format('Y-m-d');
-        }
+//        if ($request->has('dob')) {
+//            $date = \DateTime::createFromFormat('d-m-Y', $request->dob);
+//            $validated['dob'] = $date->format('Y-m-d');
+//        }
 
         $customer->update($validated);
 

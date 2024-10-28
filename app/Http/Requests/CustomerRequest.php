@@ -36,8 +36,8 @@ class CustomerRequest extends FormRequest
             'full_name' => 'required',
 //            'last_name' => 'required',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'dob' => 'nullable|date',
-            'telephone' => 'nullable',
+            'dob' => 'required|date',
+            'telephone' => 'required',
             'status' => 'nullable',
             'address' => 'nullable',
         ];

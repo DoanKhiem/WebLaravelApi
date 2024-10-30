@@ -47,8 +47,13 @@ class AgentController extends Controller
         $validatedData = $request->validated();
 
         $member = User::create([
-            'name' => $validatedData['name'],
+            'full_name' => $validatedData['full_name'],
             'email' => $validatedData['email'],
+            'contact_number' => $validatedData['contact_number'],
+            'dob' => $validatedData['dob'],
+            'doj' => $validatedData['doj'],
+            'role' => $validatedData['role'],
+            'level' => $validatedData['level'],
             'password' => Hash::make($validatedData['password']),
         ]);
 

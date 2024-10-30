@@ -25,8 +25,12 @@ class AgentRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name' => 'required|string|max:255',
-
+            'full_name' => 'required|string|max:255',
+            'contact_number' => 'required|string|max:12',
+            'dob' => 'required|date',
+            'doj' => 'required|date',
+            'role' => 'required|string|max:20',
+            'level' => 'required|string|max:20',
         ];
 
         // If the request is an update request, ignore the current record for the unique email validation

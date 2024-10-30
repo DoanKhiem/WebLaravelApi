@@ -24,7 +24,7 @@ class LoanRequest extends FormRequest
     public function rules(): array
     {
 //        return [
-//            'customer_id' => 'required',
+//            'client_id' => 'required',
 //            'package_id' => 'required',
 //            'payment_period' => 'required',
 //            'document_type' => 'required',
@@ -43,7 +43,7 @@ class LoanRequest extends FormRequest
 //        ];
 
         $rules = [
-            'customer_id' => 'required',
+            'client_id' => 'required',
             'package_id' => 'required',
             'payment_period' => 'required',
             'document_type' => 'required',

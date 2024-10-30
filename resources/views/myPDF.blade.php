@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Laravel 11 Generate PDF Example - Payday</title>
+    <title>Laravel 11 Generate PDF Example - ItSolutionStuff.com</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" >
 </head>
 <body>
@@ -13,17 +13,15 @@
 <table class="table table-bordered">
     <tr>
         <th>ID</th>
-        <th>Client</th>
-        <th>Package</th>
-        <th>Amount</th>
+        <th>Name</th>
+        <th>Email</th>
     </tr>
-    @foreach($loans as $item)
-    <tr>
-        <td>{{ $item->id }}</td>
-        <td>{{ $item->client->first_name }} {{ $item->client->last_name }}</td>
-        <td>{{ $item->package->title }}</td>
-        <td>{{ $item->amount }}</td>
-    </tr>
+    @foreach($users as $user)
+        <tr>
+            <td>{{ $user->id }}</td>
+            <td>{{ $user->name }}</td>
+            <td>{{ $user->email }}</td>
+        </tr>
     @endforeach
 </table>
 

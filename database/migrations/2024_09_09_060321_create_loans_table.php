@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('loans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained()->onDelete('cascade');
+            $table->foreignId('client_id')->constrained()->onDelete('cascade');
             $table->enum('document_type', ['NID', 'Driver License']);
             $table->float('nid_driver_license_number');
             $table->string('nid_driver_license_file');

@@ -11,7 +11,7 @@ class Loan extends Model
 
     protected $table = 'loans';
     protected $fillable = [
-        'customer_id',
+        'client_id',
         'document_type',
         'nid_driver_license_number',
         'nid_driver_license_file',
@@ -29,9 +29,9 @@ class Loan extends Model
         'next_fn_pay'
     ];
 
-    public function customer()
+    public function client()
     {
-        return $this->belongsTo(Customer::class, 'customer_id');
+        return $this->belongsTo(Client::class, 'client_id');
     }
 
     public function package()

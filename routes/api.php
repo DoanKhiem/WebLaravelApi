@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\LoanControler;
@@ -25,7 +25,7 @@ Route::middleware('auth:sanctum')->post('check-token', [AuthController::class, '
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'dashboard']);
     Route::resource('agent', AgentController::class);
-    Route::resource('customer', CustomerController::class);
+    Route::resource('client', ClientController::class);
     Route::resource('package', PackageController::class);
     Route::resource('payment-period', PaymentPeriodController::class);
     Route::resource('loan', LoanControler::class);

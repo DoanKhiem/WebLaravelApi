@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
+use App\Models\Client;
 use App\Models\Loan;
 use App\Models\Package;
 use App\Models\User;
@@ -17,7 +17,7 @@ class DashboardController extends Controller
             'success' => true,
             'data' => [
                 'account_login' => Auth::user(),
-                'customers' => Customer::count(),
+                'clients' => Client::count(),
                 'packages' => Package::count(),
                 'loans' => Loan::count(),
                 'agents' => User::count()

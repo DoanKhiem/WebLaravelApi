@@ -11,8 +11,8 @@ class Package extends Model
 
     protected $fillable = ['title', 'amount'];
 
-    public function customers()
+    public function clients()
     {
-        return $this->belongsToMany(Customer::class, 'customer_package');
+        return $this->belongsToMany(Client::class, 'client_package');
     }
 }

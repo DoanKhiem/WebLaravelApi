@@ -13,14 +13,14 @@
 <table class="table table-bordered">
     <tr>
         <th>ID</th>
-        <th>Customer</th>
+        <th>Client</th>
         <th>Package</th>
         <th>Amount</th>
     </tr>
     @foreach($loans as $item)
     <tr>
         <td>{{ $item->id }}</td>
-        <td>{{ $item->customer->first_name }} {{ $item->customer->last_name }}</td>
+        <td>{{ $item->client->first_name }} {{ $item->client->last_name }}</td>
         <td>{{ $item->package->title }}</td>
         <td>{{ $item->amount }}</td>
     </tr>

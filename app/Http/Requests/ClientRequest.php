@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class CustomerRequest extends FormRequest
+class ClientRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,28 +26,28 @@ class CustomerRequest extends FormRequest
 //        return [
 //            'first_name' => 'required',
 //            'last_name' => 'required',
-//            'email' => 'required|email|unique:customers,email',
+//            'email' => 'required|email|unique:clients,email',
 //            'telephone' => 'required',
 //            'address' => 'required',
 //            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-//            'id_number' => 'required|unique:customers,id_number',
+//            'id_number' => 'required|unique:clients,id_number',
 //        ];
         $rules = [
             'full_name' => 'required',
 //            'last_name' => 'required',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'dob' => 'required|date',
-            'telephone' => 'required',
+            'contact_number' => 'required',
             'status' => 'nullable',
-            'address' => 'nullable',
+//            'address' => 'nullable',
         ];
 
         if ($this->method() === 'PUT' || $this->method() === 'PATCH') {
-            $rules['email'] = 'nullable|email|unique:customers,email,' . $this->route('customer');
-//            $rules['id_number'] = 'required|unique:customers,id_number,' . $this->route('customer');
+            $rules['email'] = 'nullable|email|unique:clients,email,' . $this->route('client');
+//            $rules['id_number'] = 'required|unique:clients,id_number,' . $this->route('client');
         } else {
-            $rules['email'] = 'nullable|email|unique:customers,email';
-//            $rules['id_number'] = 'required|unique:customers,id_number';
+            $rules['email'] = 'nullable|email|unique:clients,email';
+//            $rules['id_number'] = 'required|unique:clients,id_number';
         }
 
         return $rules;

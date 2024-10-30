@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoanRequest;
 use App\Mail\LoanMail;
-use App\Models\Customer;
+use App\Models\Client;
 use App\Models\Loan;
 use App\Models\Package;
 use App\Models\PaymentPeriod;
@@ -20,7 +20,7 @@ class LoanControler extends Controller
      */
     public function index()
     {
-        $query = Loan::with(['customer', 'package', 'paymentPeriod']);
+        $query = Loan::with(['client', 'package', 'paymentPeriod']);
 
         $loans = $query->orderBy('updated_at','DESC')->paginate(10);
         return response()->json([
@@ -37,7 +37,7 @@ class LoanControler extends Controller
         return response()->json([
             'success' => true,
             'data' => [
-                'customers' => Customer::all(),
+                'clients' => Client::all(),
                 'packages' => Package::all(),
                 'paymentPeriods' => PaymentPeriod::all(),
             ]
@@ -82,7 +82,7 @@ class LoanControler extends Controller
                 'title' => 'Mail from Payday',
                 'body' => 'Create loan successfully'
             ];
-            Mail::to($loan->customer->email)->send(new LoanMail($mailData));
+            Mail::to($loan->client->email)->send(new LoanMail($mailData));
 
             return response()->json([
                 'success' => true,

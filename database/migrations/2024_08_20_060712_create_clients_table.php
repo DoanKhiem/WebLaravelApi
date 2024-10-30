@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customers', function (Blueprint $table) {
+        Schema::create('clients', function (Blueprint $table) {
             $table->id();
             $table->string('full_name');
-            $table->string('avatar')->nullable();
-            $table->date('dob')->nullable();
-            $table->string('email')->unique()->nullable();
-            $table->string('telephone', 15)->nullable();
-            $table->enum('status', ['Actived', 'Completed'])->default('Actived');
-            $table->text('address')->nullable();
+//            $table->string('avatar')->nullable();
+            $table->date('dob');
+            $table->string('email')->unique();
+            $table->string('contact_number', 15);
+            $table->enum('status', ['Active', 'Completed'])->default('Active');
+//            $table->text('address')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customers');
+        Schema::dropIfExists('clients');
     }
 };

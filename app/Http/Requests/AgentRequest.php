@@ -40,9 +40,9 @@ class AgentRequest extends FormRequest
                 'string',
                 'email',
                 'max:255',
-                Rule::unique('users')->ignore($this->route('member')),
+                Rule::unique('users')->ignore($this->route('agent')),
             ];
-            $rules['password'] = 'sometimes|required|string|min:8|confirmed';
+            $rules['password'] = 'nullable|string|min:8|confirmed';
         } else {
             $rules['email'] = 'required|string|email|max:255|unique:users';
             $rules['password'] = 'required|string|min:8|confirmed';

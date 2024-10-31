@@ -95,7 +95,7 @@ class ClientController extends Controller
      */
     public function show(string $id)
     {
-        $client = Client::find($id);
+        $client = Client::with('loans')->find($id);
 
         if (!$client) {
             return response()->json([

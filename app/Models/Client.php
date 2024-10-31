@@ -11,8 +11,12 @@ class Client extends Model
 
     protected $fillable = ['full_name', 'dob', 'contact_number', 'status', 'email'];
 
-    public function packages()
+//    public function packages()
+//    {
+//        return $this->belongsToMany(Package::class, 'client_package');
+//    }
+    public function loans()
     {
-        return $this->belongsToMany(Package::class, 'client_package');
+        return $this->hasMany(Loan::class);
     }
 }

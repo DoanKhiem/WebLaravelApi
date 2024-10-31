@@ -15,19 +15,50 @@ class AgentController extends Controller
      */
     public function index(Request $request)
     {
-        $name = $request->get('name');
+        $full_name_and_email = $request->get('full_name_and_email');
 
         $query = User::query();
 
-        if ($name) {
-            $query->where('name', 'like', '%' . $name . '%')
-                ->orWhere('email', 'like', '%' . $name . '%');
+        if ($full_name_and_email) {
+            $query->where('full_name', 'like', '%' . $full_name_and_email . '%')
+                ->orWhere('email', 'like', '%' . $full_name_and_email . '%');
+        }
+        if ($request->get('role')) {
+            $query->where('role', $request->get('role'));
+        }
+        if ($request->get('level')) {
+            $query->where('level', $request->get('level'));
         }
 
-        $members = $query->orderBy('updated_at','DESC')->paginate(10);
+        if ($request->get('sortID')) {
+            $query->orderBy('id', $request->get('sortID'));
+        }
+        if ($request->get('sortEmail')) {
+            $query->orderBy('email', $request->get('sortEmail'));
+        }
+        if ($request->get('sortFullName')) {
+            $query->orderBy('full_name', $request->get('sortFullName'));
+        }
+        if ($request->get('sortContactNumber')) {
+            $query->orderBy('contact_number', $request->get('sortContactNumber'));
+        }
+        if ($request->get('sortDob')) {
+            $query->orderBy('dob', $request->get('sortDob'));
+        }
+        if ($request->get('sortDoj')) {
+            $query->orderBy('doj', $request->get('sortDoj'));
+        }
+        if ($request->get('sortRole')) {
+            $query->orderBy('role', $request->get('sortRole'));
+        }
+        if ($request->get('sortLevel')) {
+            $query->orderBy('level', $request->get('sortLevel'));
+        }
+
+        $agents = $query->orderBy('updated_at','DESC')->paginate(10);
         return response()->json([
             'success' => true,
-            'data' => $members
+            'data' => $agents
         ]);
     }
 
@@ -60,7 +91,7 @@ class AgentController extends Controller
         return response()->json([
             'success' => true,
             'data' => $member,
-            'message' => 'Member created successfully'
+            'message' => 'Agent created successfully'
         ], 201); // Trả về mã trạng thái 201 (Created)
     }
 
@@ -69,17 +100,17 @@ class AgentController extends Controller
      */
     public function show(string $id)
     {
-        $member = User::find($id);
+        $agents = User::find($id);
 
-        if (!$member) {
+        if (!$agents) {
             return response()->json([
                 'success' => false,
-                'message' => 'Member not found'
+                'message' => 'Agent not found'
             ], 404);
         }
         return response()->json([
             'success' => true,
-            'data' => $member
+            'data' => $agents
         ]);
     }
 
@@ -96,31 +127,31 @@ class AgentController extends Controller
      */
     public function update(AgentRequest $request, string $id)
     {
-        $member = User::find($id);
+        $agents = User::find($id);
 
-        if (!$member) {
+        if (!$agents) {
             return response()->json([
                 'success' => false,
-                'message' => 'Member not found'
+                'message' => 'Agent not found'
             ], 404);
         }
 
         $validated = $request->validated();
 
-        // Only update the name field
-        $member->name = $validated['name'];
-
         // If password is present in the request and it matches the password_confirmation, update the password
         if (isset($validated['password'])) {
-            $member->password = Hash::make($validated['password']);
+            $validated['password'] = Hash::make($validated['password']);
+        } else {
+            unset($validated['password']);
         }
+        $agents->update($validated);
 
-        $member->save();
+
 
         return response()->json([
             'success' => true,
-            'data' => $member,
-            'message' => 'Member updated successfully'
+            'data' => $agents,
+            'message' => 'Agent updated successfully'
         ]);
     }
 
@@ -129,20 +160,20 @@ class AgentController extends Controller
      */
     public function destroy(string $id)
     {
-        $member = User::find($id);
+        $agents = User::find($id);
 
-        if (!$member) {
+        if (!$agents) {
             return response()->json([
                 'success' => false,
-                'message' => 'Member not found'
+                'message' => 'Agent not found'
             ], 404);
         }
 
-        $member->delete();
+        $agents->delete();
 
         return response()->json([
             'success' => true,
-            'message' => 'Member deleted successfully'
+            'message' => 'Agent deleted successfully'
         ]);
     }
 }

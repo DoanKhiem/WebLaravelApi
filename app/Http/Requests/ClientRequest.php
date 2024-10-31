@@ -43,10 +43,10 @@ class ClientRequest extends FormRequest
         ];
 
         if ($this->method() === 'PUT' || $this->method() === 'PATCH') {
-            $rules['email'] = 'nullable|email|unique:clients,email,' . $this->route('client');
+            $rules['email'] = 'email|unique:clients,email,' . $this->route('client');
 //            $rules['id_number'] = 'required|unique:clients,id_number,' . $this->route('client');
         } else {
-            $rules['email'] = 'nullable|email|unique:clients,email';
+            $rules['email'] = 'email|unique:clients,email';
 //            $rules['id_number'] = 'required|unique:clients,id_number';
         }
 

@@ -29,6 +29,7 @@ return new class extends Migration
             $table->decimal('fn_pay_amount_2', 8, 2)->nullable();
             $table->decimal('fn_pay_amount_3', 8, 2)->nullable();
             $table->date('next_fn_pay')->nullable();
+            $table->enum('status', ['Pending', 'Approved', 'Rejected', 'Activated', 'Late', 'Blocked'])->default('Pending');
             $table->timestamps();
         });
     }

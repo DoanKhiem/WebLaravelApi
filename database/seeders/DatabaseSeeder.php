@@ -36,14 +36,20 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'title' => 'K 500',
-                'amount' => 500,
+                'title' => 'K 150',
+                'amount' => 150,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'title' => 'K 1000',
-                'amount' => 1000,
+                'title' => 'K 200',
+                'amount' => 200,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'K 300',
+                'amount' => 300,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -51,20 +57,14 @@ class DatabaseSeeder extends Seeder
 
         DB::table('payment_periods')->insert([
             [
-                'title' => 'FN (25%)',
+                'title' => '1 FN (25%)',
                 'percent' => 25,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'title' => 'FN (50%)',
+                'title' => '2 FN (50%)',
                 'percent' => 50,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'title' => 'FN (75%)',
-                'percent' => 75,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

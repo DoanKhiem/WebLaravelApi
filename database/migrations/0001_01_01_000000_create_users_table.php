@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('level');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('status', ['Activated', 'Locked'])->default('Activated');
             $table->rememberToken();
             $table->timestamps();
         });

@@ -18,9 +18,18 @@ class LoanControler extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $query = Loan::with(['client', 'package', 'paymentPeriod']);
+
+        if ($request->get('status')) {
+            $query->where('status', $request->get('status'));
+        }
+        if ($request->get('name_or_id')) {
+            $query->whereHas('client', function ($query) use ($request) {
+                $query->where('full_name', 'like', '%' . $request->get('name_or_id') . '%');
+            })->orWhere('id', 'like', '%' . $request->get('name_or_id') . '%');
+        }
 
         $loans = $query->orderBy('updated_at','DESC')->paginate(10);
         return response()->json([
@@ -103,7 +112,7 @@ class LoanControler extends Controller
      */
     public function show(string $id)
     {
-        $loan = Loan::find($id);
+        $loan = Loan::with(['client', 'package', 'paymentPeriod'])->find($id);
 
         if (!$loan) {
             return response()->json([
@@ -215,5 +224,24 @@ class LoanControler extends Controller
         $pdf->save($path);
 
         return response()->json(['url' => asset('pdf/' . $filename)]);
+    }
+
+    public function updateStatus(Request $request, string $id)
+    {
+        $loan = Loan::find($id);
+
+        if (!$loan) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Loan not found'
+            ], 404);
+        }
+        $loan->update($request->only('status'));
+
+        return response()->json([
+            'success' => true,
+            'data' => $loan,
+            'message' => 'Loan status updated successfully'
+        ]);
     }
 }

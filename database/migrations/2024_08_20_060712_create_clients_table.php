@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('dob');
             $table->string('email')->unique();
             $table->string('contact_number', 15);
-            $table->enum('status', ['Active', 'Completed'])->default('Active');
+            $table->enum('status', ['Activated', 'Locked'])->default('Activated');
 //            $table->text('address')->nullable();
             $table->timestamps();
         });

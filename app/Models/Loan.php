@@ -26,7 +26,8 @@ class Loan extends Model
         'fn_pay_amount_1',
         'fn_pay_amount_2',
         'fn_pay_amount_3',
-        'next_fn_pay'
+        'next_fn_pay',
+        'status',
     ];
 
     public function client()

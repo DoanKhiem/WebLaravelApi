@@ -15,13 +15,26 @@ class AgentController extends Controller
      */
     public function index(Request $request)
     {
-        $full_name_and_email = $request->get('full_name_and_email');
 
         $query = User::query();
 
-        if ($full_name_and_email) {
-            $query->where('full_name', 'like', '%' . $full_name_and_email . '%')
-                ->orWhere('email', 'like', '%' . $full_name_and_email . '%');
+        if ($request->get('id')) {
+            $query->where('id', 'like', '%' . $request->get('id') . '%');
+        }
+        if ($request->get('full_name')) {
+            $query->where('full_name', 'like', '%' . $request->get('full_name') . '%');
+        }
+        if ($request->get('dob')) {
+            $query->where('dob', $request->get('dob'));
+        }
+        if ($request->get('doj')) {
+            $query->where('doj', $request->get('doj'));
+        }
+        if ($request->get('email')) {
+            $query->where('email', 'like', '%' . $request->get('email') . '%');
+        }
+        if ($request->get('contact_number')) {
+            $query->where('contact_number', 'like', '%' . $request->get('contact_number') . '%');
         }
         if ($request->get('role')) {
             $query->where('role', $request->get('role'));

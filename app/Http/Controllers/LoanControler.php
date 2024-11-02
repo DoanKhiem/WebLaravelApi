@@ -10,6 +10,7 @@ use App\Models\Package;
 use App\Models\PaymentPeriod;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
@@ -61,14 +62,8 @@ class LoanControler extends Controller
         $validated = $request->validated();
 
         $fields = ['nid_driver_license_file', 'work_id_file', 'selfie', 'pay_slip_1', 'pay_slip_2', 'pay_slip_3'];
+        $tempFiles = [];
 
-        foreach ($fields as $field) {
-            if ($request->hasFile($field)) {
-                $file = $request->file($field);
-                $filename = $file->getClientOriginalName();
-                $validated[$field] = $filename;
-            }
-        }
         if ($request->has('next_fn_pay')) {
             $date = \DateTime::createFromFormat('d-m-Y', $request->next_fn_pay);
 //            $formattedDate = $date->format('Y-m-d');
@@ -76,29 +71,49 @@ class LoanControler extends Controller
             $validated['next_fn_pay'] = $date->format('Y-m-d');
         }
 
-        $loan = Loan::create($validated);
+        DB::beginTransaction(); // Bắt đầu giao dịch
 
-        if ($loan) {
+        try {
+            // Store files temporarily
             foreach ($fields as $field) {
                 if ($request->hasFile($field)) {
                     $file = $request->file($field);
                     $filename = $file->getClientOriginalName();
-                    $file->storeAs('loans/'.$loan->id.'/'.$field, $filename, 'public');
+                    $tempPath = $file->storeAs('temp/'.$field, $filename, 'public');
+                    $tempFiles[$field] = $tempPath;
+                    $validated[$field] = $filename;
                 }
             }
 
+            // Send email
             $mailData = [
                 'title' => 'Mail from Payday',
                 'body' => 'Create loan successfully'
             ];
-            Mail::to($loan->client->email)->send(new LoanMail($mailData));
+            $client = Client::find($request->client_id);
+            Mail::to($client->email)->send(new LoanMail($mailData));
 
+            // Save loan to database
+            $loan = Loan::create($validated);
+
+            // Move files to final location
+            foreach ($tempFiles as $field => $tempPath) {
+                $finalPath = 'loans/'.$loan->id.'/'.$field.'/'.$validated[$field];
+                Storage::disk('public')->move($tempPath, $finalPath);
+            }
+
+            DB::commit(); // Lưu tất cả các thay đổi vào cơ sở dữ liệu nếu không có lỗi
             return response()->json([
                 'success' => true,
                 'data' => $loan,
                 'message' => 'Loan created successfully'
             ], 201); // Trả về mã trạng thái 201 (Created)
-        } else {
+        } catch (\Exception $e) {
+            // Delete temporary files if any step fails
+            foreach ($tempFiles as $tempPath) {
+                Storage::disk('public')->delete($tempPath);
+            }
+            DB::rollBack(); // Hủy tất cả các thay đổi nếu có lỗi xảy ra
             return response()->json([
                 'success' => false,
                 'message' => 'Loan could not be created'

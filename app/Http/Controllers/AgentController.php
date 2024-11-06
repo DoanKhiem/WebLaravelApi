@@ -68,7 +68,7 @@ class AgentController extends Controller
             $query->orderBy('level', $request->get('sortLevel'));
         }
 
-        $agents = $query->orderBy('updated_at','DESC')->paginate(10);
+        $agents = $query->paginate(10);
         return response()->json([
             'success' => true,
             'data' => $agents

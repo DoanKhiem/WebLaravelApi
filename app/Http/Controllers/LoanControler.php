@@ -64,13 +64,6 @@ class LoanControler extends Controller
         $fields = ['nid_driver_license_file', 'work_id_file', 'selfie', 'pay_slip_1', 'pay_slip_2', 'pay_slip_3'];
         $tempFiles = [];
 
-        if ($request->has('period_date')) {
-            $date = \DateTime::createFromFormat('d-m-Y', $request->period_date);
-//            $formattedDate = $date->format('Y-m-d');
-//            $validated['period_date'] = $formattedDate;
-            $validated['period_date'] = $date->format('Y-m-d');
-        }
-
         DB::beginTransaction(); // Bắt đầu giao dịch
 
         try {
@@ -176,11 +169,6 @@ class LoanControler extends Controller
                 $file->storeAs('loans/'.$loan->id.'/'.$field, $filename, 'public');
                 $validated[$field] = $filename;
             }
-        }
-
-        if ($request->has('period_date')) {
-            $date = \DateTime::createFromFormat('d-m-Y', $request->period_date);
-            $validated['period_date'] = $date->format('Y-m-d');
         }
 
         $loan->update($validated);

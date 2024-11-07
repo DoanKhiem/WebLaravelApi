@@ -26,7 +26,9 @@ class Loan extends Model
         'fn_pay_amount_1',
         'fn_pay_amount_2',
         'fn_pay_amount_3',
+        'outstanding_amount',
         'period_date',
+        'start_date',
         'status',
     ];
 

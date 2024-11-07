@@ -55,10 +55,10 @@ class LoanRequest extends FormRequest
 //            'pay_slip_1' => 'required|file',
 //            'pay_slip_2' => 'required|file',
 //            'pay_slip_3' => 'required|file',
-            'fn_pay_amount_1' => 'nullable|numeric',
-            'fn_pay_amount_2' => 'nullable|numeric',
-            'fn_pay_amount_3' => 'nullable|numeric',
-            'period_date' => 'nullable|date',
+            'fn_pay_amount_1' => 'required|numeric',
+            'fn_pay_amount_2' => 'required|numeric',
+//            'fn_pay_amount_3' => 'required|numeric',
+            'outstanding_amount' => 'required|numeric',
         ];
 
         if ($this->method() === 'PUT' || $this->method() === 'PATCH') {

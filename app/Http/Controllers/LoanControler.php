@@ -32,7 +32,7 @@ class LoanControler extends Controller
             })->orWhere('id', 'like', '%' . $request->get('name_or_id') . '%');
         }
 
-        $loans = $query->orderBy('updated_at','DESC')->paginate(10);
+        $loans = $query->paginate(10);
         return response()->json([
             'success' => true,
             'data' => $loans
@@ -64,11 +64,11 @@ class LoanControler extends Controller
         $fields = ['nid_driver_license_file', 'work_id_file', 'selfie', 'pay_slip_1', 'pay_slip_2', 'pay_slip_3'];
         $tempFiles = [];
 
-        if ($request->has('next_fn_pay')) {
-            $date = \DateTime::createFromFormat('d-m-Y', $request->next_fn_pay);
+        if ($request->has('period_date')) {
+            $date = \DateTime::createFromFormat('d-m-Y', $request->period_date);
 //            $formattedDate = $date->format('Y-m-d');
-//            $validated['next_fn_pay'] = $formattedDate;
-            $validated['next_fn_pay'] = $date->format('Y-m-d');
+//            $validated['period_date'] = $formattedDate;
+            $validated['period_date'] = $date->format('Y-m-d');
         }
 
         DB::beginTransaction(); // Bắt đầu giao dịch
@@ -178,9 +178,9 @@ class LoanControler extends Controller
             }
         }
 
-        if ($request->has('next_fn_pay')) {
-            $date = \DateTime::createFromFormat('d-m-Y', $request->next_fn_pay);
-            $validated['next_fn_pay'] = $date->format('Y-m-d');
+        if ($request->has('period_date')) {
+            $date = \DateTime::createFromFormat('d-m-Y', $request->period_date);
+            $validated['period_date'] = $date->format('Y-m-d');
         }
 
         $loan->update($validated);
@@ -245,12 +245,23 @@ class LoanControler extends Controller
     {
         $loan = Loan::find($id);
 
+
         if (!$loan) {
             return response()->json([
                 'success' => false,
                 'message' => 'Loan not found'
             ], 404);
         }
+
+        if($request->status == 'Approved'){
+            $request->validate([
+                'period_date' => 'required|date|after_or_equal:today',
+                'start_date' => 'required|date|after_or_equal:today',
+            ]);
+        }
+
+        $loan->update($request->only('status', 'period_date', 'start_date'));
+
         $loan->update($request->only('status'));
 
         return response()->json([

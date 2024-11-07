@@ -39,7 +39,7 @@ class LoanRequest extends FormRequest
 //            'fn_pay_amount_1' => 'nullable|numeric',
 //            'fn_pay_amount_2' => 'nullable|numeric',
 //            'fn_pay_amount_3' => 'nullable|numeric',
-//            'next_fn_pay' => 'nullable|date',
+//            'period_date' => 'nullable|date',
 //        ];
 
         $rules = [
@@ -58,7 +58,7 @@ class LoanRequest extends FormRequest
             'fn_pay_amount_1' => 'nullable|numeric',
             'fn_pay_amount_2' => 'nullable|numeric',
             'fn_pay_amount_3' => 'nullable|numeric',
-            'next_fn_pay' => 'nullable|date',
+            'period_date' => 'nullable|date',
         ];
 
         if ($this->method() === 'PUT' || $this->method() === 'PATCH') {

@@ -14,12 +14,21 @@ class LoanMail extends Mailable
     use Queueable, SerializesModels;
 
     public $mailData;
+    public $pdfPath;
     /**
      * Create a new message instance.
      */
-    public function __construct($mailData)
+    public function __construct($mailData, $pdfPath)
     {
         $this->mailData = $mailData;
+        $this->pdfPath = $pdfPath;
+    }
+
+    public function build()
+    {
+        return $this->view('emails.loan')
+            ->with('mailData', $this->mailData)
+            ->attach($this->pdfPath);
     }
 
     /**

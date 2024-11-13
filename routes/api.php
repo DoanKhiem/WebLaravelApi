@@ -31,5 +31,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('loan', LoanControler::class);
     Route::post('loan/update_status/{id}', [LoanControler::class, 'updateStatus']);
 
-    Route::get('export-pdf-loan', [LoanControler::class, 'exportPdf']);
+
 });
+Route::get('export-pdf-loan', [LoanControler::class, 'exportPdf']);

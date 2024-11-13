@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoanRequest;
 use App\Mail\LoanMail;
+use App\Models\AmountLoan;
 use App\Models\Client;
 use App\Models\Loan;
 use App\Models\Package;
 use App\Models\PaymentPeriod;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +23,7 @@ class LoanControler extends Controller
      */
     public function index(Request $request)
     {
-        $query = Loan::with(['client', 'package', 'paymentPeriod']);
+        $query = Loan::with(['client', 'package', 'paymentPeriod', 'amountLoan']);
 
         if ($request->get('status')) {
             $query->where('status', $request->get('status'));
@@ -64,13 +66,6 @@ class LoanControler extends Controller
         $fields = ['nid_driver_license_file', 'work_id_file', 'selfie', 'pay_slip_1', 'pay_slip_2', 'pay_slip_3'];
         $tempFiles = [];
 
-        if ($request->has('period_date')) {
-            $date = \DateTime::createFromFormat('d-m-Y', $request->period_date);
-//            $formattedDate = $date->format('Y-m-d');
-//            $validated['period_date'] = $formattedDate;
-            $validated['period_date'] = $date->format('Y-m-d');
-        }
-
         DB::beginTransaction(); // Bắt đầu giao dịch
 
         try {
@@ -95,6 +90,17 @@ class LoanControler extends Controller
 
             // Save loan to database
             $loan = Loan::create($validated);
+
+            AmountLoan::create([
+                'loan_id' => $loan->id,
+                'fn1_amount' => $validated['fn1_amount'],
+                'fn2_amount' => $validated['fn2_amount'],
+                'fn3_amount' => $validated['fn3_amount'],
+                'fn4_amount' => $validated['fn4_amount'],
+                'fn5_amount' => $validated['fn5_amount'],
+                'fn6_amount' => $validated['fn6_amount'],
+                'outstanding_amount' => $validated['outstanding_amount'],
+            ]);
 
             // Move files to final location
             foreach ($tempFiles as $field => $tempPath) {
@@ -127,7 +133,7 @@ class LoanControler extends Controller
      */
     public function show(string $id)
     {
-        $loan = Loan::with(['client', 'package', 'paymentPeriod'])->find($id);
+        $loan = Loan::with(['client', 'package', 'paymentPeriod', 'amountLoan'])->find($id);
 
         if (!$loan) {
             return response()->json([
@@ -178,11 +184,6 @@ class LoanControler extends Controller
             }
         }
 
-        if ($request->has('period_date')) {
-            $date = \DateTime::createFromFormat('d-m-Y', $request->period_date);
-            $validated['period_date'] = $date->format('Y-m-d');
-        }
-
         $loan->update($validated);
 
         return response()->json([
@@ -215,8 +216,6 @@ class LoanControler extends Controller
             }
         }
 
-
-
         return response()->json([
             'success' => true,
             'message' => 'Loan deleted successfully'
@@ -225,20 +224,22 @@ class LoanControler extends Controller
 
     public function exportPdf()
     {
-        $loans = Loan::all(); // dữ liệu bạn muốn xuất ra PDF
-        $data = [
-            'title' => 'Welcome to Payday',
-            'date' => date('m/d/Y'),
-            'loans' => $loans
-        ];
-
-        $pdf = Pdf::loadView('loan_export', $data); // 'pdf_view' là tên view bạn muốn render ra PDF
-
-        $filename = 'export.pdf';
-        $path = public_path('pdf/' . $filename);
-        $pdf->save($path);
-
-        return response()->json(['url' => asset('pdf/' . $filename)]);
+        $loan = User::find(1);
+        $this->sendLoanMailWithPdf($loan);
+//        $loans = Loan::all(); // dữ liệu bạn muốn xuất ra PDF
+//        $data = [
+//            'title' => 'Welcome to Payday',
+//            'date' => date('m/d/Y'),
+//            'loans' => $loans
+//        ];
+//
+//        $pdf = Pdf::loadView('loan_export', $data); // 'pdf_view' là tên view bạn muốn render ra PDF
+//
+//        $filename = 'export.pdf';
+//        $path = public_path('pdf/' . $filename);
+//        $pdf->save($path);
+//
+//        return response()->json(['url' => asset('pdf/' . $filename)]);
     }
 
     public function updateStatus(Request $request, string $id)
@@ -255,12 +256,25 @@ class LoanControler extends Controller
 
         if($request->status == 'Approved'){
             $request->validate([
-                'period_date' => 'required|date|after_or_equal:today',
+                'fn1_date' => 'required|date|after_or_equal:today',
                 'start_date' => 'required|date|after_or_equal:today',
             ]);
-        }
 
-        $loan->update($request->only('status', 'period_date', 'start_date'));
+            $loan->update($request->only('status', 'start_date'));
+
+            $amountLoan = AmountLoan::where('loan_id', $loan->id)->whereNull('deleted_at')->first();
+
+            $amountLoan->update([
+                'fn1_date' => $request->fn1_date,
+                'fn2_date' => date('Y-m-d', strtotime($request->fn1_date . ' + 14 days')),
+                'fn3_date' => date('Y-m-d', strtotime($request->fn1_date . ' + 28 days')),
+                'fn4_date' => date('Y-m-d', strtotime($request->fn1_date . ' + 42 days')),
+                'fn5_date' => date('Y-m-d', strtotime($request->fn1_date . ' + 56 days')),
+                'fn6_date' => date('Y-m-d', strtotime($request->fn1_date . ' + 70 days')),
+            ]);
+
+
+        }
 
         $loan->update($request->only('status'));
 
@@ -269,5 +283,34 @@ class LoanControler extends Controller
             'data' => $loan,
             'message' => 'Loan status updated successfully'
         ]);
+    }
+
+
+    public function generatePdf($loan)
+    {
+        $data = [
+            'title' => 'Loan Details',
+            'loan' => $loan
+        ];
+
+        $pdf = Pdf::loadView('loan_export', $data);
+        $filename = 'loan_' . $loan->id . '.pdf';
+        $path = storage_path('app/public/pdf/' . $filename);
+        $pdf->save($path);
+
+        return $path;
+    }
+
+    public function sendLoanMailWithPdf($loan)
+    {
+        $pdfPath = $this->generatePdf($loan);
+
+        $mailData = [
+            'title' => 'Loan Details',
+            'body' => 'Please find the attached PDF for loan details.'
+        ];
+        $client = Client::find(1);
+
+        Mail::to($client->email)->send(new LoanMail($mailData, $pdfPath));
     }
 }

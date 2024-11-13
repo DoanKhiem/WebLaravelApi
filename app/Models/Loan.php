@@ -23,10 +23,12 @@ class Loan extends Model
         'pay_slip_1',
         'pay_slip_2',
         'pay_slip_3',
-        'fn_pay_amount_1',
-        'fn_pay_amount_2',
-        'fn_pay_amount_3',
-        'period_date',
+//        'fn_pay_amount_1',
+//        'fn_pay_amount_2',
+//        'fn_pay_amount_3',
+//        'outstanding_amount',
+//        'period_date',
+        'start_date',
         'status',
     ];
 
@@ -43,5 +45,10 @@ class Loan extends Model
     public function paymentPeriod()
     {
         return $this->belongsTo(PaymentPeriod::class, 'payment_period');
+    }
+
+    public function amountLoan()
+    {
+        return $this->hasOne(AmountLoan::class, 'loan_id')->whereNull('deleted_at');;
     }
 }

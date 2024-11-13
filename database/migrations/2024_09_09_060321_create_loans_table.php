@@ -25,10 +25,9 @@ return new class extends Migration
             $table->string('pay_slip_1');
             $table->string('pay_slip_2');
             $table->string('pay_slip_3');
-            $table->decimal('fn_pay_amount_1', 8, 2)->nullable();
-            $table->decimal('fn_pay_amount_2', 8, 2)->nullable();
-            $table->decimal('fn_pay_amount_3', 8, 2)->nullable();
-            $table->date('period_date')->nullable();
+
+//            $table->date('period_date')->nullable();
+            $table->date('start_date')->nullable();
             $table->enum('status', ['Pending', 'Approved', 'Rejected', 'Activated', 'Late', 'Blocked'])->default('Pending');
             $table->timestamps();
         });

@@ -36,12 +36,6 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'title' => 'K 150',
-                'amount' => 150,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
                 'title' => 'K 200',
                 'amount' => 200,
                 'created_at' => now(),
@@ -50,6 +44,18 @@ class DatabaseSeeder extends Seeder
             [
                 'title' => 'K 300',
                 'amount' => 300,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'K 400',
+                'amount' => 400,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'K 500',
+                'amount' => 500,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

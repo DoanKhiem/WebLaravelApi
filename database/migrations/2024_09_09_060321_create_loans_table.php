@@ -26,8 +26,15 @@ return new class extends Migration
             $table->string('pay_slip_2');
             $table->string('pay_slip_3');
 
-//            $table->date('period_date')->nullable();
+
+            $table->float('outstanding_amount')->default(0);
+            $table->float('total_amount')->default(0);
+            $table->float('paid_amount')->default(0);
+
+//            $table->json('data_fn');
+
             $table->date('start_date')->nullable();
+            $table->date('period_date')->nullable();
             $table->enum('status', ['Pending', 'Approved', 'Rejected', 'Completed', 'Late', 'Blocked'])->default('Pending');
             $table->timestamps();
         });

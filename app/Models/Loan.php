@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Loan extends Model
 {
@@ -23,11 +24,13 @@ class Loan extends Model
         'pay_slip_1',
         'pay_slip_2',
         'pay_slip_3',
-//        'fn_pay_amount_1',
-//        'fn_pay_amount_2',
-//        'fn_pay_amount_3',
-//        'outstanding_amount',
-//        'period_date',
+
+//        'data_fn',
+        'outstanding_amount',
+        'total_amount',
+        'paid_amount',
+        'outstanding_amount',
+        'period_date',
         'start_date',
         'status',
     ];
@@ -47,8 +50,11 @@ class Loan extends Model
         return $this->belongsTo(PaymentPeriod::class, 'payment_period');
     }
 
-    public function amountLoan()
+    public function latestUniqueLoanHistory()
     {
-        return $this->hasOne(AmountLoan::class, 'loan_id')->whereNull('deleted_at');;
+        return $this->hasMany(LoanHistory::class, 'loan_id')
+            ->select('loan_history.*')
+            ->join(DB::raw('(SELECT MAX(id) as id FROM loan_history GROUP BY loan_id, fn) as latest'), 'loan_history.id', '=', 'latest.id');
     }
+
 }

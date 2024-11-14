@@ -30,6 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('payment-period', PaymentPeriodController::class);
     Route::resource('loan', LoanControler::class);
     Route::post('loan/update_status/{id}', [LoanControler::class, 'updateStatus']);
+    Route::post('loan/update_paid_amount/{id}', [LoanControler::class, 'updatePaidAmount']);
 
 
 });

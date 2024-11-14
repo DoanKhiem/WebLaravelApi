@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoanRequest;
+use App\Mail\LoanCreate;
 use App\Mail\LoanMail;
 use App\Models\AmountLoan;
 use App\Models\Client;
@@ -86,7 +87,7 @@ class LoanControler extends Controller
                 'body' => 'Create loan successfully'
             ];
             $client = Client::find($request->client_id);
-            Mail::to($client->email)->send(new LoanMail($mailData));
+            Mail::to($client->email)->send(new LoanCreate($mailData));
 
             // Save loan to database
             $loan = Loan::create($validated);
@@ -285,7 +286,30 @@ class LoanControler extends Controller
         ]);
     }
 
+    public function updatePaidAmount(Request $request, string $id)
+    {
+        $loan = Loan::find($id);
 
+        if (!$loan) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Loan not found'
+            ], 404);
+        }
+
+        $amountLoan = AmountLoan::where('loan_id', $loan->id)->whereNull('deleted_at')->first();
+        if ($request->status) {
+            $loan->update($request->only('status'));
+        }
+
+        $amountLoan->update($request->all());
+
+        return response()->json([
+            'success' => true,
+            'data' => $amountLoan,
+            'message' => 'Loan paid amount updated successfully'
+        ]);
+    }
     public function generatePdf($loan)
     {
         $data = [

@@ -28,7 +28,7 @@ return new class extends Migration
 
 //            $table->date('period_date')->nullable();
             $table->date('start_date')->nullable();
-            $table->enum('status', ['Pending', 'Approved', 'Rejected', 'Activated', 'Late', 'Blocked'])->default('Pending');
+            $table->enum('status', ['Pending', 'Approved', 'Rejected', 'Completed', 'Late', 'Blocked'])->default('Pending');
             $table->timestamps();
         });
     }

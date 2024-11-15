@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoanRequest;
 use App\Mail\LoanCreate;
 use App\Mail\LoanMail;
-use App\Models\AmountLoan;
 use App\Models\Client;
 use App\Models\Loan;
+use App\Models\LoanHistory;
 use App\Models\Package;
 use App\Models\PaymentPeriod;
 use App\Models\User;
@@ -24,7 +24,7 @@ class LoanControler extends Controller
      */
     public function index(Request $request)
     {
-        $query = Loan::with(['client', 'package', 'paymentPeriod', 'amountLoan']);
+        $query = Loan::with(['client', 'package', 'paymentPeriod']);
 
         if ($request->get('status')) {
             $query->where('status', $request->get('status'));
@@ -88,20 +88,10 @@ class LoanControler extends Controller
             ];
             $client = Client::find($request->client_id);
             Mail::to($client->email)->send(new LoanCreate($mailData));
-
             // Save loan to database
             $loan = Loan::create($validated);
 
-            AmountLoan::create([
-                'loan_id' => $loan->id,
-                'fn1_amount' => $validated['fn1_amount'],
-                'fn2_amount' => $validated['fn2_amount'],
-                'fn3_amount' => $validated['fn3_amount'],
-                'fn4_amount' => $validated['fn4_amount'],
-                'fn5_amount' => $validated['fn5_amount'],
-                'fn6_amount' => $validated['fn6_amount'],
-                'outstanding_amount' => $validated['outstanding_amount'],
-            ]);
+
 
             // Move files to final location
             foreach ($tempFiles as $field => $tempPath) {
@@ -134,7 +124,7 @@ class LoanControler extends Controller
      */
     public function show(string $id)
     {
-        $loan = Loan::with(['client', 'package', 'paymentPeriod', 'amountLoan'])->find($id);
+        $loan = Loan::with(['client', 'package', 'paymentPeriod', 'latestUniqueLoanHistory'])->find($id);
 
         if (!$loan) {
             return response()->json([
@@ -255,25 +245,13 @@ class LoanControler extends Controller
             ], 404);
         }
 
-        if($request->status == 'Approved'){
+        if($request->status == 'Approved') {
             $request->validate([
-                'fn1_date' => 'required|date|after_or_equal:today',
+                'period_date' => 'required|date|after_or_equal:today',
                 'start_date' => 'required|date|after_or_equal:today',
             ]);
 
-            $loan->update($request->only('status', 'start_date'));
-
-            $amountLoan = AmountLoan::where('loan_id', $loan->id)->whereNull('deleted_at')->first();
-
-            $amountLoan->update([
-                'fn1_date' => $request->fn1_date,
-                'fn2_date' => date('Y-m-d', strtotime($request->fn1_date . ' + 14 days')),
-                'fn3_date' => date('Y-m-d', strtotime($request->fn1_date . ' + 28 days')),
-                'fn4_date' => date('Y-m-d', strtotime($request->fn1_date . ' + 42 days')),
-                'fn5_date' => date('Y-m-d', strtotime($request->fn1_date . ' + 56 days')),
-                'fn6_date' => date('Y-m-d', strtotime($request->fn1_date . ' + 70 days')),
-            ]);
-
+            $loan->update($request->only('status', 'start_date', 'period_date'));
 
         }
 
@@ -297,18 +275,35 @@ class LoanControler extends Controller
             ], 404);
         }
 
-        $amountLoan = AmountLoan::where('loan_id', $loan->id)->whereNull('deleted_at')->first();
+        $loan_history = LoanHistory::create([
+            'loan_id' => $loan->id,
+            'paid_date' => now(),
+            'amount' => $request->amount,
+            'fn' => $request->fn,
+        ]);
         if ($request->status) {
             $loan->update($request->only('status'));
         }
 
-        $amountLoan->update($request->all());
+        if ($loan_history) {
+            return response()->json([
+                'success' => true,
+                'data' => $loan,
+                'message' => 'Loan paid amount updated successfully'
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Loan paid amount could not be updated'
+            ]);
+        }
 
-        return response()->json([
-            'success' => true,
-            'data' => $amountLoan,
-            'message' => 'Loan paid amount updated successfully'
-        ]);
+
+
+
+
+
+
     }
     public function generatePdf($loan)
     {

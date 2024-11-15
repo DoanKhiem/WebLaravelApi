@@ -63,6 +63,8 @@ class LoanRequest extends FormRequest
             'fn6_amount' => 'required|numeric',
 //            'fn_pay_amount_3' => 'required|numeric',
             'outstanding_amount' => 'required|numeric',
+            'total_amount' => 'required|numeric',
+            'next_pay_amount' => 'required|numeric',
         ];
 
         if ($this->method() === 'PUT' || $this->method() === 'PATCH') {

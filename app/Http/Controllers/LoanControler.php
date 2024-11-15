@@ -124,7 +124,12 @@ class LoanControler extends Controller
      */
     public function show(string $id)
     {
-        $loan = Loan::with(['client', 'package', 'paymentPeriod', 'latestUniqueLoanHistory'])->find($id);
+//        $loan = Loan::with(['client', 'package', 'paymentPeriod', 'loanHistories'])
+//            ->leftJoin('loan_history', 'loans.id', '=', 'loan_history.loan_id')
+//            ->select('loans.*', DB::raw('SUM(loan_history.amount) as total_paid_amount'))
+//            ->groupBy('loans.id')->find($id);
+
+        $loan = Loan::with(['client', 'package', 'paymentPeriod', 'loanHistories'])->find($id);
 
         if (!$loan) {
             return response()->json([
@@ -249,9 +254,10 @@ class LoanControler extends Controller
             $request->validate([
                 'period_date' => 'required|date|after_or_equal:today',
                 'start_date' => 'required|date|after_or_equal:today',
+                'next_pay_date' => 'required|date|after_or_equal:today',
             ]);
 
-            $loan->update($request->only('status', 'start_date', 'period_date'));
+            $loan->update($request->only('status', 'start_date', 'period_date', 'next_pay_date'));
 
         }
 
@@ -282,7 +288,9 @@ class LoanControler extends Controller
             'fn' => $request->fn,
         ]);
         if ($request->status) {
-            $loan->update($request->only('status'));
+            $loan->update($request->only('status', 'next_pay_amount', 'paid_amount'));
+        } else {
+            $loan->update($request->only('next_pay_amount', 'paid_amount'));
         }
 
         if ($loan_history) {

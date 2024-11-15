@@ -26,8 +26,7 @@ return new class extends Migration
             $table->string('pay_slip_2');
             $table->string('pay_slip_3');
 
-
-            $table->float('outstanding_amount')->default(0);
+            $table->float('outstanding_amount')->default(0); // số tiền ban đầu
             $table->float('total_amount')->default(0);
             $table->float('paid_amount')->default(0);
 
@@ -35,6 +34,11 @@ return new class extends Migration
 
             $table->date('start_date')->nullable();
             $table->date('period_date')->nullable();
+
+            $table->integer('current_fn')->default(1);
+            $table->date('next_pay_date')->nullable();
+            $table->float('next_pay_amount');
+
             $table->enum('status', ['Pending', 'Approved', 'Rejected', 'Completed', 'Late', 'Blocked'])->default('Pending');
             $table->timestamps();
         });

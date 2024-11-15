@@ -32,6 +32,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('loan/update_status/{id}', [LoanControler::class, 'updateStatus']);
     Route::post('loan/update_paid_amount/{id}', [LoanControler::class, 'updatePaidAmount']);
 
-
+    Route::get('cronjob/loan/{id}', [DashboardController::class, 'cronJobLoan']);
 });
 Route::get('export-pdf-loan', [LoanControler::class, 'exportPdf']);

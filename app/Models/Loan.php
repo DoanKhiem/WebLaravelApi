@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 
 class Loan extends Model
 {
@@ -32,6 +33,10 @@ class Loan extends Model
         'outstanding_amount',
         'period_date',
         'start_date',
+        'current_fn',
+        'next_pay_date',
+        'next_pay_amount',
+
         'status',
     ];
 
@@ -50,11 +55,24 @@ class Loan extends Model
         return $this->belongsTo(PaymentPeriod::class, 'payment_period');
     }
 
+    public function loanHistories()
+    {
+        return $this->hasMany(LoanHistory::class, 'loan_id');
+    }
+
     public function latestUniqueLoanHistory()
     {
         return $this->hasMany(LoanHistory::class, 'loan_id')
             ->select('loan_history.*')
             ->join(DB::raw('(SELECT MAX(id) as id FROM loan_history GROUP BY loan_id, fn) as latest'), 'loan_history.id', '=', 'latest.id');
     }
+
+
+//    public function scopeWithTotalAmount()
+//    {
+//        return $this->belongsTo(LoanHistory::class, 'loan_id')
+//            ->select('loans.*', DB::raw('SUM(loan_history.amount) as total_amount'))
+//            ->groupBy('loans.id');
+//    }
 
 }

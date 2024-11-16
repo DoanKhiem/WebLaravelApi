@@ -24,6 +24,9 @@ class LoanControler extends Controller
      */
     public function index(Request $request)
     {
+        $dashboard = new DashboardController();
+        $dashboard->cronJobLoan('all');
+
         $query = Loan::with(['client', 'package', 'paymentPeriod']);
 
         if ($request->get('status')) {
@@ -305,14 +308,8 @@ class LoanControler extends Controller
                 'message' => 'Loan paid amount could not be updated'
             ]);
         }
-
-
-
-
-
-
-
     }
+
     public function generatePdf($loan)
     {
         $data = [

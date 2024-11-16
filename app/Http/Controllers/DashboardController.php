@@ -67,9 +67,7 @@ class DashboardController extends Controller
 
                 $package = Package::find($loan->package_id);
                 $payment_period = PaymentPeriod::find($loan->payment_period);
-                if ($loan->current_fn === 2 && $payment_period->percent === 50) {
-                    $loan->total_amount = $loan->outstanding_amount/2;
-                } else {
+                if (!($loan->current_fn === 2 && $payment_period->percent === 50)) { // nếu fn hiện tại là 2 và % là 50 thì không cộng tiền
                     $loan->total_amount = $loan->outstanding_amount + (0.5 * $package->amount);
                     $loan->status = 'Late';
                 }

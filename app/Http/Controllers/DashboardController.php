@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\Cronjob;
 use App\Models\Loan;
 use App\Models\Package;
 use App\Models\PaymentPeriod;
@@ -31,21 +32,34 @@ class DashboardController extends Controller
 
     public function cronJobLoan(string $id)
     {
+        $cronJob = Cronjob::where('created_at', '>=', Carbon::now()->startOfDay())->first();
+        if ($cronJob) return;
+
         if ($id === 'all') {
             $loans = Loan::whereIn('status', ['Approved', 'Late'])->get();
+            $totalLoanUpdate = 0;
             foreach ($loans as $loan) {
-                $this->updateLoanCronJob($loan);
+                $totalLoanUpdate += $this->updateLoanCronJob($loan);
             }
+
         } else {
             $loan = Loan::whereIn('status', ['Approved', 'Late'])->find($id);
-            if ($loan) $this->updateLoanCronJob($loan);
+            if($loan) {
+                $totalLoanUpdate = $this->updateLoanCronJob($loan);
+            } else {
+                $totalLoanUpdate = 0;
+            }
         }
+
+        Cronjob::create([
+            'total_loans' => $totalLoanUpdate
+        ]);
     }
 
     public function updateLoanCronJob($loan)
     {
-        $periodDate = Carbon::parse($loan->period_date);
-        $today = Carbon::now();
+        $periodDate = Carbon::parse($loan->period_date)->startOfDay();
+        $today = Carbon::now()->startOfDay();
         $daysDiff = $today->diffInDays($periodDate, false);
         if ($daysDiff < 0) { // nếu đã qua ngày đó
             $daysDiff = abs($daysDiff);
@@ -80,7 +94,10 @@ class DashboardController extends Controller
                 $loan->status = 'Blocked';
                 $loan->save(['status']);
             }
+
+            return 1;
         }
+        return 0;
 
     }
 }

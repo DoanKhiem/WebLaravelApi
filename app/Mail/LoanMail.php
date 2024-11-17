@@ -47,7 +47,7 @@ class LoanMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.loanCreate',
+            view: 'emails.loanPrint',
         );
     }
 

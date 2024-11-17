@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Browsershot\Browsershot;
 
 class LoanControler extends Controller
 {
@@ -241,6 +242,8 @@ class LoanControler extends Controller
 //        return response()->json(['url' => asset('pdf/' . $filename)]);
     }
 
+
+
     public function updateStatus(Request $request, string $id)
     {
         $loan = Loan::find($id);
@@ -314,15 +317,51 @@ class LoanControler extends Controller
     {
         $data = [
             'title' => 'Loan Details',
-            'loan' => $loan
+            'loan' => $loan,
+            'image_path' => public_path('images/logo.png'),
         ];
+//        dd(public_path('images/logo.png'));
+//        $pdf = Pdf::loadView('loan_export', $data);
+//        $pdf->setPaper('A3', 'portrait'); // Thiết lập kích thước trang A4
+//        $pdf->setPaper([0, 0, 1024, 1448], 'portrait');
+//        $filename = 'loan_' . $loan->id . '.pdf';
+//        $path = storage_path('app/public/pdf/' . $filename);
+//        $pdf->save($path);
 
-        $pdf = Pdf::loadView('loan_export', $data);
+        $html = view('loan_export', $data)->render();
+
         $filename = 'loan_' . $loan->id . '.pdf';
         $path = storage_path('app/public/pdf/' . $filename);
-        $pdf->save($path);
+
+        Browsershot::html($html)
+            ->margins(20, 20, 20, 20, 'px')
+//            ->format('A4')
+//            ->setOption('landscape', true) // Optional: set landscape mode
+            ->save($path);
 
         return $path;
+    }
+
+    public function printLoan(string $id)
+    {
+        $loan = Loan::find($id);
+
+        $pdfPath = $this->generatePdf($loan);
+
+        $mailData = [
+            'title' => 'Loan Details',
+            'body' => 'Please find the attached PDF for loan details.'
+        ];
+        $client = Client::find($loan->client_id);
+
+        Mail::to($client->email)->send(new LoanMail($mailData, $pdfPath));
+
+//        $pdfPath = $this->generatePdf($loan);
+        $filename = 'loan_' . $loan->id . '.pdf';
+        return response()->json([
+            'success' => true,
+            'data' => $filename
+        ]);
     }
 
     public function sendLoanMailWithPdf($loan)

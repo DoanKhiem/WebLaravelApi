@@ -34,5 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('cronjob/loan/{id}', [DashboardController::class, 'cronJobLoan']);
     Route::get('loan/print/{id}', [LoanControler::class, 'printLoan']);
+
+    Route::get('loans/export', [LoanControler::class, 'exportLoan']);
 });
 Route::get('export-pdf-loan', [LoanControler::class, 'exportPdf']);

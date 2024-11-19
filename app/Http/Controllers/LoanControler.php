@@ -12,6 +12,7 @@ use App\Models\Package;
 use App\Models\PaymentPeriod;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -328,7 +329,7 @@ class LoanControler extends Controller
 //        $path = storage_path('app/public/pdf/' . $filename);
 //        $pdf->save($path);
 
-        $html = view('loan_export', $data)->render();
+        $html = view('loan_detail_export', $data)->render();
 
         $filename = 'loan_' . $loan->id . '.pdf';
         $path = storage_path('app/public/pdf/' . $filename);
@@ -375,5 +376,37 @@ class LoanControler extends Controller
         $client = Client::find(1);
 
         Mail::to($client->email)->send(new LoanMail($mailData, $pdfPath));
+    }
+
+    public function exportLoan ()
+    {
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $endOfMonth = Carbon::now()->endOfMonth();
+
+        $loans = Loan::whereBetween('created_at', [$startOfMonth, $endOfMonth])->with(['client', 'package', 'paymentPeriod'])->get();
+        $clients = Client::whereBetween('created_at', [$startOfMonth, $endOfMonth])->get();
+
+        $data = [
+            'title' => 'Loans',
+            'loans' => $loans,
+            'clients' => $clients,
+            'image_path' => public_path('images/logo.png'),
+        ];
+
+        $html = view('loan_export', $data)->render();
+
+        $filename = 'loan_export_' . now()->format('d_m_Y') . '.pdf';
+        $path = storage_path('app/public/pdf/' . $filename);
+
+        Browsershot::html($html)
+            ->margins(20, 20, 20, 20, 'px')
+//            ->format('A4')
+//            ->setOption('landscape', true) // Optional: set landscape mode
+            ->save($path);
+
+        return response()->json([
+            'success' => true,
+            'data' => $filename
+        ]);
     }
 }

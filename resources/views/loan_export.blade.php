@@ -1,3 +1,6 @@
+@php
+    use Carbon\Carbon;
+@endphp
 <!DOCTYPE html>
 <html>
 <head>
@@ -122,7 +125,7 @@
                     <a href="#"><img src="{{ $image_path }}"></a>
                 </div>
                 <div class="col-md-6">
-                    <h1>PERSONAL LOAN AGREEEMENT</h1>
+                    <h1>LOAN INFORMATION</h1>
                 </div>
             </div>
             <div class="border-line"></div>
@@ -131,90 +134,112 @@
 
     <section class="form-section">
         <div class="container">
-            <div class="content">
-                <b>This Loan Agreement (”Agreement”) is made and ective on the _______________________2024.</b>
-            </div>
+            {{--            <div class="content">--}}
+            {{--                <b>This Loan Agreement (”Agreement”) is made and ective on the _______________________2024.</b>--}}
+            {{--            </div>--}}
 
-            <div class="border-line"></div>
+            {{--            <div class="border-line"></div>--}}
 
-            <div class="content grid-columns">
-                <content>
-                    <b>BETWEEN:</b>
-                    <p>RICKY KEPI (the “Lender”), having his residence located at P. O. BOX 814, Boroko, Papua New Guinea. </p>
-                </content>
-                <content>
-                    <b>AND:</b>
-                    <p>_________________(the “Borrower”), having his residence located at ______________________________. </p>
-                </content>
-            </div>
+            {{--            <div class="content grid-columns">--}}
+            {{--                <content>--}}
+            {{--                    <b>BETWEEN:</b>--}}
+            {{--                    <p>RICKY KEPI (the “Lender”), having his residence located at P. O. BOX 814, Boroko, Papua New Guinea. </p>--}}
+            {{--                </content>--}}
+            {{--                <content>--}}
+            {{--                    <b>AND:</b>--}}
+            {{--                    <p>_________________(the “Borrower”), having his residence located at ______________________________. </p>--}}
+            {{--                </content>--}}
+            {{--            </div>--}}
 
-            <div class="border-line"></div>
+            {{--            <div class="border-line"></div>--}}
 
-            <div class="content grid-columns">
-                <content>
-                    <b>RECITALS:</b>
-                    <div class="info">
-                        <p>WHEREAS, Borrower desired to obtain from Lender a loan in the principal amount of PGK __________,
-                            amount in words __________________________________________kina______________________ toea. </p>
+            {{--            <div class="content grid-columns">--}}
+            {{--                <content>--}}
+            {{--                    <b>RECITALS:</b>--}}
+            {{--                    <div class="info">--}}
+            {{--                        <p>WHEREAS, Borrower desired to obtain from Lender a loan in the principal amount of PGK __________,--}}
+            {{--                            amount in words __________________________________________kina______________________ toea. </p>--}}
 
-                        <p>WHEREAS, Lender is an individual and Lender desires to grant Borrower the Loan for Personal use only.</p>
+            {{--                        <p>WHEREAS, Lender is an individual and Lender desires to grant Borrower the Loan for Personal use only.</p>--}}
 
-                        <p>WHEREAS, Borrower’s obligation to repay the loan by the deadline stated below on item #3.</p>
+            {{--                        <p>WHEREAS, Borrower’s obligation to repay the loan by the deadline stated below on item #3.</p>--}}
 
-                        <p>NOW, THEREFORE, in consideration of the terms and conditons herein contained and for the other good and valuable consideration, the receipt and suciency of which are hereby acknowledged, the parties hererto agree as follows:</p>
-                    </div>
-                </content>
-            </div>
+            {{--                        <p>NOW, THEREFORE, in consideration of the terms and conditons herein contained and for the other good and valuable consideration, the receipt and suciency of which are hereby acknowledged, the parties hererto agree as follows:</p>--}}
+            {{--                    </div>--}}
+            {{--                </content>--}}
+            {{--            </div>--}}
 
-            <div class="border-line"></div>
+            {{--            <div class="border-line"></div>--}}
 
-            <div class="content grid-columns">
-                <content>
-                    <b>Item #1:</b>
-                    <div class="info">
-                        <b>PROMISE TO PAY</b>
+            {{--            <div class="content grid-columns">--}}
+            {{--                <content>--}}
+            {{--                    <b>Item #1:</b>--}}
+            {{--                    <div class="info">--}}
+            {{--                        <b>PROMISE TO PAY</b>--}}
 
-                        <p>Within 7-14 days (fortnight day) from today. Borrower promises to pay to Lender the sum of PGK ________, amount in words ________________________________________________kina____________________ toea.</p>
-                    </div>
-                </content>
+            {{--                        <p>Within 7-14 days (fortnight day) from today. Borrower promises to pay to Lender the sum of PGK ________, amount in words ________________________________________________kina____________________ toea.</p>--}}
+            {{--                    </div>--}}
+            {{--                </content>--}}
 
-                <content>
-                    <b>Item #2:</b>
-                    <div class="info">
-                        <b>BREAKDOWN OF LOAN</b>
+            {{--                <content>--}}
+            {{--                    <b>Item #2:</b>--}}
+            {{--                    <div class="info">--}}
+            {{--                        <b>BREAKDOWN OF LOAN</b>--}}
 
-                        <p>
-                            Amount of Loan (Principle Amount): PGK___________________. <br>
-                            Per Fortnight Loan Interest: PGK __________________. <br>
-                            Total Loan interest : PGK __________________ per _________ fortnight. <br>
-                            Total of payments: PGK __________________.
-                        </p>
-                    </div>
-                </content>
+            {{--                        <p>--}}
+            {{--                            Amount of Loan (Principle Amount): PGK___________________. <br>--}}
+            {{--                            Per Fortnight Loan Interest: PGK __________________. <br>--}}
+            {{--                            Total Loan interest : PGK __________________ per _________ fortnight. <br>--}}
+            {{--                            Total of payments: PGK __________________.--}}
+            {{--                        </p>--}}
+            {{--                    </div>--}}
+            {{--                </content>--}}
 
-                <content>
-                    <b>Item #3:</b>
-                    <div class="info">
-                        <b>REPAYMENT</b>
+            {{--                <content>--}}
+            {{--                    <b>Item #3:</b>--}}
+            {{--                    <div class="info">--}}
+            {{--                        <b>REPAYMENT</b>--}}
 
-                        <p>
-                            Borrower will repay the amount of this loan in _______ fortnight(s) based on the following schedule: <br>
-                            Fortnight #1: PGK______________ (amount) __________________ (date). <br>
-                            Fortnight #2: PGK____________ (amount) __________________ (date).
-                        </p>
-                    </div>
-                </content>
+            {{--                        <p>--}}
+            {{--                            Borrower will repay the amount of this loan in _______ fortnight(s) based on the following schedule: <br>--}}
+            {{--                            Fortnight #1: PGK______________ (amount) __________________ (date). <br>--}}
+            {{--                            Fortnight #2: PGK____________ (amount) __________________ (date).--}}
+            {{--                        </p>--}}
+            {{--                    </div>--}}
+            {{--                </content>--}}
 
-                <content>
-                    <b>Item #4:</b>
-                    <div class="info">
-                        <b>FAILURE TO PAY ON TIME</b>
+            {{--                <content>--}}
+            {{--                    <b>Item #4:</b>--}}
+            {{--                    <div class="info">--}}
+            {{--                        <b>FAILURE TO PAY ON TIME</b>--}}
 
-                        <p>
-                            Interest & Penalty: 50% per fortnight after the deadline stated on item #3.
-                        </p>
-                    </div>
-                </content>
+            {{--                        <p>--}}
+            {{--                            Interest & Penalty: 50% per fortnight after the deadline stated on item #3.--}}
+            {{--                        </p>--}}
+            {{--                    </div>--}}
+            {{--                </content>--}}
+            {{--            </div>--}}
+
+{{--            <div class="border-line"></div>--}}
+
+            <div class="table-form">
+                <table width="100%">
+                    <tr>
+                        <th colspan="4" style="text-align: left;">Clients</th>
+                    </tr>
+                    <tr class="re-column">
+                        <th>Full Name</th>
+                        <th>Date of Birth</th>
+                        <th>Email</th>
+                        <th>Contact Number</th>
+                    </tr>
+                    <tr @foreach($clients as $item) class="re-column">
+                        <th>{{ $item->full_name }}</th>
+                        <th>{{ Carbon::parse($item->dob)->format('d/m/Y') }}</th>
+                        <th>{{ $item->email }}</th>
+                        <th>{{ $item->contact_number }}</th>
+                    </tr @endforeach>
+                </table>
             </div>
 
             <div class="border-line"></div>
@@ -222,172 +247,57 @@
             <div class="table-form">
                 <table width="100%">
                     <tr>
-                        <th colspan="3" style="text-align: left;">SUMMARY PAYMENT SCHEDULE</th>
+                        <th colspan="9" style="text-align: left;">Loans</th>
                     </tr>
                     <tr class="re-column">
-                        <td style="border: none; padding: 0px;">
-                            <table width="100%">
-                                <tr>
-                                    <th>LOAN AMOUNT</th>
-                                    <th>INTEREST RATE FN#1</th>
-                                    <th>FN#1 DUE DATE</th>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="">
-                                        K100
-                                    </td>
-                                    <td>K25</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="">
-                                        K200
-                                    </td>
-                                    <td>K50</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="">
-                                        K300
-                                    </td>
-                                    <td>K75</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="">
-                                        K400
-                                    </td>
-                                    <td>K100</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="">
-                                        K500
-                                    </td>
-                                    <td>K125</td>
-                                    <td></td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td style="border: none; padding: 0px;">
-                            <table width="100%">
-                                <tr>
-                                    <th>INTEREST RATE FN#2</th>
-                                    <th>FN#2 DUE DATE</th>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="">
-                                        K25
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="">
-                                        K50
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="">
-                                        K75
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="">
-                                        K100
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="">
-                                        K125
-                                    </td>
-                                    <td></td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td style="border: none; padding: 0px;">
-                            <table width="100%">
-                                <tr>
-                                    <th>IF LATE PENALTY PER FORTNIGHT</th>
-                                    <th>TOTAL PRINCIPAL + INTEREST</th>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="">
-                                        K50
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="">
-                                        K100
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="">
-                                        K150
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="">
-                                        K200
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="">
-                                        K250
-                                    </td>
-                                    <td></td>
-                                </tr>
-                            </table>
-                        </td>
+                        <th>ID</th>
+                        <th>Client</th>
+                        <th>Loan Amount</th>
+                        <th>Payment Period</th>
+                        <th>Status</th>
+                        <th>Current FN</th>
+                        <th>Total Paid Amount</th>
+                        <th>Total Amount</th>
+                        <th>Total Debt</th>
                     </tr>
+                    <tr @foreach($loans as $item) class="re-column">
+                        <th>{{ $item->id }}</th>
+                        <th>{{ $item->client->full_name }}</th>
+                        <th>{{ $item->package->title }}</th>
+                        <th>{{ $item->paymentPeriod->title }}</th>
+                        <th>{{ $item->status }}</th>
+                        <th>{{ $item->current_fn }}</th>
+                        <th>{{ $item->paid_amount }}</th>
+                        <th>{{ $item->total_amount }}</th>
+                        <th>{{ $item->total_amount - $item->paid_amount }}</th>
+                    </tr @endforeach>
                 </table>
             </div>
 
-            <div class="sign-section">
-                <div class="sign-parts">
-                    <div class="sign-line"></div>
-                    <div class="name-info">
-                        <h1>Ricky Kepi (Lender)</h1>
-                        <h1>Date:</h1>
-                    </div>
-                </div>
-                <div class="sign-parts">
-                    <div class="sign-line"></div>
-                    <div class="name-info">
-                        <h1>Witness</h1>
-                        <h1>Date:</h1>
-                    </div>
-                </div>
-                <div class="sign-parts">
-                    <div class="sign-line"></div>
-                    <p>agrees to the terms and conditions stated above</p>
-                    <div class="name-info">
-                        <h1>_________________(Borrower)</h1>
-                        <h1>Date:</h1>
-                    </div>
-                </div>
-            </div>
+{{--            <div class="sign-section">--}}
+{{--                <div class="sign-parts">--}}
+{{--                    <div class="sign-line"></div>--}}
+{{--                    <div class="name-info">--}}
+{{--                        <h1>Ricky Kepi (Lender)</h1>--}}
+{{--                        <h1>Date:</h1>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--                <div class="sign-parts">--}}
+{{--                    <div class="sign-line"></div>--}}
+{{--                    <div class="name-info">--}}
+{{--                        <h1>Witness</h1>--}}
+{{--                        <h1>Date:</h1>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--                <div class="sign-parts">--}}
+{{--                    <div class="sign-line"></div>--}}
+{{--                    <p>agrees to the terms and conditions stated above</p>--}}
+{{--                    <div class="name-info">--}}
+{{--                        <h1>_________________(Borrower)</h1>--}}
+{{--                        <h1>Date:</h1>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
         </div>
     </section>
 </main>

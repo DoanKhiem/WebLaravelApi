@@ -39,6 +39,12 @@ class LoanControler extends Controller
                 $query->where('full_name', 'like', '%' . $request->get('name_or_id') . '%');
             })->orWhere('id', 'like', '%' . $request->get('name_or_id') . '%');
         }
+        if ($request->get('period')) {
+            $period = $request->get('period');
+            $startDate = Carbon::parse($period[0])->startOfDay();
+            $endDate = Carbon::parse($period[1])->endOfDay();
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        }
 
         $loans = $query->paginate(10);
         return response()->json([
@@ -378,13 +384,27 @@ class LoanControler extends Controller
         Mail::to($client->email)->send(new LoanMail($mailData, $pdfPath));
     }
 
-    public function exportLoan ()
+    public function exportLoan (Request $request)
     {
-        $startOfMonth = Carbon::now()->startOfMonth();
-        $endOfMonth = Carbon::now()->endOfMonth();
+        $query = Loan::with(['client', 'package', 'paymentPeriod']);
 
-        $loans = Loan::whereBetween('created_at', [$startOfMonth, $endOfMonth])->with(['client', 'package', 'paymentPeriod'])->get();
-        $clients = Client::whereBetween('created_at', [$startOfMonth, $endOfMonth])->get();
+        if ($request->get('status')) {
+            $query->where('status', $request->get('status'));
+        }
+        if ($request->get('name_or_id')) {
+            $query->whereHas('client', function ($query) use ($request) {
+                $query->where('full_name', 'like', '%' . $request->get('name_or_id') . '%');
+            })->orWhere('id', 'like', '%' . $request->get('name_or_id') . '%');
+        }
+        if ($request->get('period')) {
+            $period = $request->get('period');
+            $startDate = Carbon::parse($period[0])->startOfDay();
+            $endDate = Carbon::parse($period[1])->endOfDay();
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        }
+
+        $loans = $query->get();
+        $clients = Client::get();
 
         $data = [
             'title' => 'Loans',

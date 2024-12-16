@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('client_id')->constrained()->onDelete('cascade');
             $table->enum('document_type', ['NID', 'Driver License']);
-            $table->float('nid_driver_license_number');
+            $table->string('nid_driver_license_number');
             $table->string('nid_driver_license_file');
-            $table->float('work_id_number');
+            $table->string('work_id_number');
             $table->string('work_id_file');
             $table->string('selfie');
             $table->foreignId('package_id')->constrained('packages')->onDelete('cascade');

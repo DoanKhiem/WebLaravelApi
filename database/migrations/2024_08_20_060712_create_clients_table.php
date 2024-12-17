@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('full_name');
 //            $table->string('avatar')->nullable();
             $table->date('dob');
+            $table->enum('gender', ['Male', 'Female', 'Other']);
             $table->string('email')->unique();
             $table->string('contact_number', 15);
             $table->enum('status', ['Activated', 'Locked'])->default('Activated');

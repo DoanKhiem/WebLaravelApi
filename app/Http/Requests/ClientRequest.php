@@ -39,6 +39,7 @@ class ClientRequest extends FormRequest
             'dob' => 'required|date',
             'contact_number' => 'required',
             'status' => 'nullable',
+            'gender' => 'required',
 //            'address' => 'nullable',
         ];
 

@@ -272,6 +272,17 @@ class LoanControler extends Controller
 
             $loan->update($request->only('status', 'start_date', 'period_date', 'next_pay_date'));
 
+            $pdfPath = $this->generatePdf($loan);
+
+            $mailData = [
+                'title' => 'Loan Application',
+                'body' => 'Have new loan approved.
+                 Attached is the loan agreement for loan number ' . $loan->id . '.'
+            ];
+            $client = Client::find($loan->client_id);
+
+            Mail::to($client->email)->send(new LoanMail($mailData, $pdfPath));
+
         }
 
         $loan->update($request->only('status'));

@@ -24,6 +24,9 @@ class DashboardController extends Controller
                 'clients' => Client::count(),
                 'packages' => Package::count(),
                 'loans' => Loan::count(),
+                'loan_pending' => Loan::where('status', 'Pending')->count(),
+                'loan_approved' => Loan::where('status', 'Approved')->count(),
+                'loan_late' => Loan::where('status', 'Late')->count(),
                 'agents' => User::count()
             ]
         ]);

@@ -36,5 +36,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('loan/print/{id}', [LoanControler::class, 'printLoan']);
 
     Route::get('loans/export', [LoanControler::class, 'exportLoan']);
+
+    Route::get('general_config', [DashboardController::class, 'generalConfig']);
+    Route::post('update_general_config', [DashboardController::class, 'updateGeneralConfig']);
 });
 Route::get('export-pdf-loan', [LoanControler::class, 'exportPdf']);

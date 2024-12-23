@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Cronjob;
+use App\Models\GeneralConfig;
 use App\Models\Loan;
 use App\Models\Package;
 use App\Models\PaymentPeriod;
@@ -102,5 +103,24 @@ class DashboardController extends Controller
         }
         return 0;
 
+    }
+
+    public function generalConfig()
+    {
+        return response()->json([
+            'success' => true,
+            'data' => GeneralConfig::find(1)
+        ]);
+    }
+
+    public function updateGeneralConfig(Request $request)
+    {
+        $generalConfig = GeneralConfig::find(1);
+        $generalConfig->update($request->all());
+        return response()->json([
+            'success' => true,
+            'data' => $generalConfig,
+            'message' => 'General config updated successfully'
+        ]);
     }
 }

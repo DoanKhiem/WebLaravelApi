@@ -6,6 +6,7 @@ use App\Http\Requests\LoanRequest;
 use App\Mail\LoanCreate;
 use App\Mail\LoanMail;
 use App\Models\Client;
+use App\Models\GeneralConfig;
 use App\Models\Loan;
 use App\Models\LoanHistory;
 use App\Models\Package;
@@ -279,9 +280,9 @@ class LoanControler extends Controller
                 'body' => 'Have new loan approved.
                  Attached is the loan agreement for loan number ' . $loan->id . '.'
             ];
-            $client = Client::find($loan->client_id);
+            $email = GeneralConfig::find(1)->email_loan_approved;
 
-            Mail::to($client->email)->send(new LoanMail($mailData, $pdfPath));
+            Mail::to($email)->send(new LoanMail($mailData, $pdfPath));
 
         }
 

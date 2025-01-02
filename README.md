@@ -16,6 +16,10 @@ composer install
 ```
 
 ```sh
+npm install
+```
+
+```sh
 cp .env.example .env
 ```
 
@@ -35,6 +39,12 @@ php artisan key:generate
 
 ```sh
 php artisan migrate
+```
+
+### Create folder pdf in folder storage/public/pdf
+
+```sh
+php artisan storage:link
 ```
 
 ### Compile and Hot-Reload for Development

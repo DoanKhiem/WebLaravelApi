@@ -84,11 +84,11 @@ class DashboardController extends Controller
                 $loan->next_pay_date = $periodDate->copy()->addDays($nextPayDateIncrement); // cập nhật ngày trả tiếp theo
 
                 $package = Package::find($loan->package_id);
-                $payment_period = PaymentPeriod::find($loan->payment_period);
-                if (!($loan->current_fn === 2 && $payment_period->percent === 50)) { // nếu fn hiện tại là 2 và % là 50 thì không cộng tiền
-                    $loan->total_amount = $loan->outstanding_amount + (0.5 * $package->amount);
+//                $payment_period = PaymentPeriod::find($loan->payment_period);
+//                if (!($loan->current_fn === 2 && $payment_period->percent === 50)) { // nếu fn hiện tại là 2 và % là 50 thì không cộng tiền
+                    $loan->total_amount = $loan->outstanding_amount + (($fnIncrement - 1) * 0.5 * $package->amount);
                     $loan->status = 'Late';
-                }
+//                }
                 $loan->next_pay_amount = $loan->total_amount - $loan->paid_amount;
 
                 $loan->save(['current_fn', 'next_pay_date', 'total_amount', 'next_pay_amount', 'status']);

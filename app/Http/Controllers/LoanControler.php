@@ -35,6 +35,10 @@ class LoanControler extends Controller
         if ($request->get('status')) {
             $query->where('status', $request->get('status'));
         }
+        if ($request->get('key') == 1) {
+            $query->whereIn('status', ['Approved', 'Late']);
+        }
+
         if ($request->get('name_or_id')) {
             $query->whereHas('client', function ($query) use ($request) {
                 $query->where('full_name', 'like', '%' . $request->get('name_or_id') . '%');
@@ -375,7 +379,6 @@ class LoanControler extends Controller
 
         Mail::to($client->email)->send(new LoanMail($mailData, $pdfPath));
 
-//        $pdfPath = $this->generatePdf($loan);
         $filename = 'loan_' . $loan->id . '.pdf';
         return response()->json([
             'success' => true,

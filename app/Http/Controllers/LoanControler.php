@@ -183,18 +183,39 @@ class LoanControler extends Controller
         }
 
         $fields = ['nid_driver_license_file', 'work_id_file', 'selfie', 'pay_slip_1', 'pay_slip_2', 'pay_slip_3'];
+        $tempFiles = [];
+
 
         foreach ($fields as $field) {
             if ($request->hasFile($field)) {
+                $file = $request->file($field);
+                $filename = $file->getClientOriginalName();
+                $tempPath = $file->storeAs('temp/'.$field, $filename, 'public');
+                $tempFiles[$field] = $tempPath;
+                $validated[$field] = $filename;
                 if ($loan->$field) {
                     Storage::disk('public')->delete('loans/'.$loan->id.'/'.$field.'/'.$loan->$field);
                 }
-                $file = $request->file($field);
-                $filename = $file->getClientOriginalName();
-                $file->storeAs('loans/'.$loan->id.'/'.$field, $filename, 'public');
-                $validated[$field] = $filename;
             }
         }
+
+        // Move files to final location
+        foreach ($tempFiles as $field => $tempPath) {
+            $finalPath = 'loans/'.$loan->id.'/'.$field.'/'.$validated[$field];
+            Storage::disk('public')->move($tempPath, $finalPath);
+        }
+
+//        foreach ($fields as $field) {
+//            if ($request->hasFile($field)) {
+//                if ($loan->$field) {
+//                    Storage::disk('public')->delete('loans/'.$loan->id.'/'.$field.'/'.$loan->$field);
+//                }
+//                $file = $request->file($field);
+//                $filename = $file->getClientOriginalName();
+//                $file->storeAs('loans/'.$loan->id.'/'.$field, $filename, 'public');
+//                $validated[$field] = $filename;
+//            }
+//        }
 
         $loan->update($validated);
 

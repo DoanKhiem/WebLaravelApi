@@ -10,6 +10,7 @@ git clone https://github.com/DoanKhiem/WebLaravelApi
 - php version >= 8.2
 - composer
 - mysql
+- node
 
 ```sh
 composer install
@@ -41,7 +42,15 @@ php artisan key:generate
 php artisan migrate
 ```
 
-### Create folder pdf in folder storage/public/pdf
+```sh
+php artisan db:seed
+```
+
+```sh
+php artisan db:seed --class=GeneralConfigSeeder
+```
+
+### *Create folder pdf in folder storage/public/pdf
 
 ```sh
 php artisan storage:link

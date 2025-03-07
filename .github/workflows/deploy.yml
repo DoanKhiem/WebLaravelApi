@@ -1,0 +1,31 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main  # Thay bằng branch chính của bạn
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to VPS
+        run: |
+          ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} -p ${{ secrets.PORT }} << 'EOF'
+            cd /var/www/WebLaravelApi  # Thay bằng đường dẫn trên VPS
+            git pull origin main      # Pull code mới nhất
+            docker-compose down       # Tắt container cũ
+            docker-compose build      # Build lại image
+            docker-compose up -d      # Chạy container mới
+            
+          EOF

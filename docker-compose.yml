@@ -1,3 +1,5 @@
+version: '3'  # Định nghĩa phiên bản Docker Compose
+
 services:
     app:
         build:
